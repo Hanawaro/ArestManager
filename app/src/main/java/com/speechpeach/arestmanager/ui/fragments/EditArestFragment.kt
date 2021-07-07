@@ -72,8 +72,10 @@ class EditArestFragment: Fragment(R.layout.fragment_edit_arest) {
     }
 
     fun selectUser() {
-        val action = EditArestFragmentDirections.actionEditArestFragmentToSelectUserFragment()
-        findNavController().navigate(action)
+        if (validate()) {
+            val action = EditArestFragmentDirections.actionEditArestFragmentToSelectUserFragment(arest)
+            findNavController().navigate(action)
+        }
     }
 
     private fun validate() : Boolean {
@@ -128,6 +130,8 @@ class EditArestFragment: Fragment(R.layout.fragment_edit_arest) {
         viewModel.getUser(args.arest).observe(viewLifecycleOwner) {
 
             user = it
+
+            viewModel.changePassport(args.arest.name, user)
 
             binding.layoutUser.apply {
                 val calendar = Calendar.getInstance().apply {
