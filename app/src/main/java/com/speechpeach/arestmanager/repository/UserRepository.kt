@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserRepository @Inject constructor(private val service: UserService) : Callback<UserResponse> {
+class UserRepository @Inject constructor(private val service: UserService) {
 
     fun get(id: Int) : MutableLiveData<User> {
         val result = MutableLiveData<User>()
@@ -76,7 +76,10 @@ class UserRepository @Inject constructor(private val service: UserService) : Cal
         return result
     }
 
-    fun update(user: User) {
+    fun update(user: User): MutableLiveData<Boolean> {
+
+        val result = MutableLiveData<Boolean>()
+
         val response = service.update(
             id = user.id,
             name = user.name,
@@ -88,15 +91,37 @@ class UserRepository @Inject constructor(private val service: UserService) : Cal
             birthplace = user.birthplace
         )
 
-        response.enqueue(this)
+        response.enqueue(object : Callback<UserResponse> {
+            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                if (response.isSuccessful) {
+                    result.value = true
+                }
+            }
+
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                result.value = false
+            }
+        })
+
+        return result
     }
 
-    fun delete(id: Int) {
+    fun delete(id: Int) : MutableLiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
         val response = service.remove(id)
-        response.enqueue(this)
+
+        response.enqueue(object : Callback<UserResponse> {
+            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                if (response.isSuccessful) {
+                    result.value = true
+                }
+            }
+
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                result.value = false
+            }
+        })
+
+        return result
     }
-
-
-    override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {  }
-    override fun onFailure(call: Call<UserResponse>, t: Throwable) {  }
 }

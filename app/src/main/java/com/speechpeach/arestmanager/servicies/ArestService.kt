@@ -14,6 +14,11 @@ interface ArestService {
     @GET("get_arests.php")
     fun getAll(): Call<ArestResponse>
 
+    @GET("get_local_arests.php")
+    fun getLocal(
+        @Query("id") userID: Int
+    ): Call<ArestResponse>
+
     @FormUrlEncoded
     @POST("create_arest.php")
     fun create(

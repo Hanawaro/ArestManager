@@ -1,16 +1,13 @@
-package com.speechpeach.arestmanager.ui.fragments
+package com.speechpeach.arestmanager.ui.fragments.arests
 
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.InputFilter
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -22,7 +19,7 @@ import com.speechpeach.arestmanager.models.User
 import com.speechpeach.arestmanager.utils.adapters.UsersAdapter
 import com.speechpeach.arestmanager.utils.hideKeyboard
 import com.speechpeach.arestmanager.utils.validation.user.UserValidation
-import com.speechpeach.arestmanager.viewmodels.CreateUserForArestViewModel
+import com.speechpeach.arestmanager.viewmodels.arests.CreateUserForArestViewModel
 import com.speechpeach.arestmanager.viewmodels.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*

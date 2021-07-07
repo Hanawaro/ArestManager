@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.speechpeach.arestmanager.ui.fragments.CreateArestFragment">
+    tools:context="com.speechpeach.arestmanager.ui.fragments.arests.CreateArestFragment">
 
     <data>
         <import type="android.text.InputType" />
@@ -11,10 +11,10 @@
             type="String" />
         <variable
             name="viewmodel"
-            type="com.speechpeach.arestmanager.viewmodels.CreateArestViewModel" />
+            type="com.speechpeach.arestmanager.viewmodels.arests.CreateArestViewModel" />
         <variable
             name="fragment"
-            type="com.speechpeach.arestmanager.ui.fragments.CreateArestFragment" />
+            type="com.speechpeach.arestmanager.ui.fragments.arests.CreateArestFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

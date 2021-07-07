@@ -7,7 +7,7 @@
         <import type="android.text.InputType" />
         <variable
             name="viewmodel"
-            type="com.speechpeach.arestmanager.viewmodels.CreateUserForArestViewModel" />
+            type="com.speechpeach.arestmanager.viewmodels.arests.CreateUserForArestViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,4 +1,4 @@
-package com.speechpeach.arestmanager.ui.fragments
+package com.speechpeach.arestmanager.ui.fragments.arests
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -16,9 +16,9 @@ import com.speechpeach.arestmanager.R
 import com.speechpeach.arestmanager.databinding.FragmentEditArestBinding
 import com.speechpeach.arestmanager.models.Arest
 import com.speechpeach.arestmanager.models.User
-import com.speechpeach.arestmanager.utils.RetrofitConstants
+import com.speechpeach.arestmanager.utils.ValueConstants
 import com.speechpeach.arestmanager.utils.hideKeyboard
-import com.speechpeach.arestmanager.viewmodels.EditArestViewModel
+import com.speechpeach.arestmanager.viewmodels.arests.EditArestViewModel
 import com.speechpeach.arestmanager.viewmodels.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -41,6 +41,7 @@ class EditArestFragment: Fragment(R.layout.fragment_edit_arest) {
         binding.apply {
             fragment = this@EditArestFragment
             arest = args.arest
+            isEditable = args.isEditable
         }
 
         activityViewModel.hideBottomMenu()
@@ -148,25 +149,28 @@ class EditArestFragment: Fragment(R.layout.fragment_edit_arest) {
 
     private fun initSpinner() {
 
+        binding.spinnerType.isEnabled = args.isEditable
+        binding.spinnerStatus.isEnabled = args.isEditable
+
         binding.spinnerType.adapter = ArrayAdapter(
                 requireContext(),
                 R.layout.item_dropdown_type,
-                ArrayList(RetrofitConstants.codes.values)
+                ArrayList(ValueConstants.Organization.codes.values)
         )
 
-        binding.spinnerType.setSelection(ArrayList(RetrofitConstants.codes.values).indexOf( RetrofitConstants.codes[args.arest.name] ))
+        binding.spinnerType.setSelection(ArrayList(ValueConstants.Organization.codes.values).indexOf( ValueConstants.Organization.codes[args.arest.name] ))
 
         binding.spinnerType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
                 when (parent?.getItemAtPosition(position)?.toString()) {
-                    RetrofitConstants.codes[17] -> {
-                        viewModel.organization = 17
-                        viewModel.changePassport(17, user)
+                    ValueConstants.Organization.codes[ValueConstants.Organization.FSSP] -> {
+                        viewModel.organization = ValueConstants.Organization.FSSP
+                        viewModel.changePassport(ValueConstants.Organization.FSSP, user)
                     }
-                    RetrofitConstants.codes[39] -> {
-                        viewModel.organization = 39
-                        viewModel.changePassport(39, user)
+                    ValueConstants.Organization.codes[ValueConstants.Organization.FNS] -> {
+                        viewModel.organization = ValueConstants.Organization.FNS
+                        viewModel.changePassport(ValueConstants.Organization.FNS, user)
                     }
                 }
 

@@ -1,4 +1,4 @@
-package com.speechpeach.arestmanager.viewmodels
+package com.speechpeach.arestmanager.viewmodels.users
 
 import androidx.lifecycle.ViewModel
 import com.speechpeach.arestmanager.models.User
@@ -8,7 +8,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateUserViewModel @Inject constructor(
+class LetUserViewModel @Inject constructor(
         private val repository: UserRepository
 ): ViewModel() {
 

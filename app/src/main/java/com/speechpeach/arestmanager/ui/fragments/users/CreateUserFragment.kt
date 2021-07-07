@@ -1,18 +1,13 @@
-package com.speechpeach.arestmanager.ui.fragments
+package com.speechpeach.arestmanager.ui.fragments.users
 
-import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -23,10 +18,11 @@ import com.speechpeach.arestmanager.databinding.FragmentCreateUserBinding
 import com.speechpeach.arestmanager.models.User
 import com.speechpeach.arestmanager.utils.hideKeyboard
 import com.speechpeach.arestmanager.utils.validation.user.UserValidation
-import com.speechpeach.arestmanager.viewmodels.CreateUserViewModel
 import com.speechpeach.arestmanager.viewmodels.MainActivityViewModel
+import com.speechpeach.arestmanager.viewmodels.users.LetUserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+
 
 @AndroidEntryPoint
 class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
@@ -34,7 +30,7 @@ class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
     private lateinit var binding: FragmentCreateUserBinding
     private val args: CreateUserFragmentArgs by navArgs()
 
-    private val viewModel: CreateUserViewModel by viewModels()
+    private val viewModel: LetUserViewModel by viewModels()
     private val activityViewModel: MainActivityViewModel by activityViewModels()
 
     private var user: User? = null
@@ -49,11 +45,18 @@ class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
 
         binding.apply {
             user = args.user
+            fragment = this@CreateUserFragment
+            isNewUser = args.user == null
         }
 
         activityViewModel.hideBottomMenu()
 
         return binding.root
+    }
+
+    fun showArests() {
+        val action = CreateUserFragmentDirections.actionCreateUserFragmentToLocalArestsListFragment(args.user!!.id)
+        findNavController().navigate(action)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,7 +69,7 @@ class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
             binding.dateTextField.setText("${day}/${month + 1}/$year")
         }
 
-        var onFirstCreated = true
+
 
         val languages = listOf(
             "Passport",
@@ -83,26 +86,29 @@ class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
                         else -> "International Passport"
                     }
             ))
-            onFirstCreated = true
         }
 
         binding.spinnerType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
-                if (!onFirstCreated) {
-                    binding.numberTextField.text?.clear()
-                    binding.setTextField.text?.clear()
-                }
-                onFirstCreated = false
-
                 when (parent?.getItemAtPosition(position)?.toString()) {
                     "Passport" -> {
                         binding.numberTextField.filters = arrayOf( InputFilter.LengthFilter(6) )
                         binding.setTextField.filters = arrayOf( InputFilter.LengthFilter(4) )
+
+                        if (binding.setTextField.text.toString().length != 4) {
+                            binding.numberTextField.text?.clear()
+                            binding.setTextField.text?.clear()
+                        }
                     }
                     "International Passport" -> {
                         binding.numberTextField.filters = arrayOf( InputFilter.LengthFilter(6) )
                         binding.setTextField.filters = arrayOf( InputFilter.LengthFilter(2) )
+
+                        if (binding.setTextField.text.toString().length != 2) {
+                            binding.numberTextField.text?.clear()
+                            binding.setTextField.text?.clear()
+                        }
                     }
                 }
 

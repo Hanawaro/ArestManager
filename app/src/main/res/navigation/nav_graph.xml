@@ -6,7 +6,7 @@
     app:startDestination="@id/arestsListFragment">
     <fragment
         android:id="@+id/arestsListFragment"
-        android:name="com.speechpeach.arestmanager.ui.fragments.ArestsListFragment"
+        android:name="com.speechpeach.arestmanager.ui.fragments.topLevel.ArestsListFragment"
         android:label="Arests"
         tools:layout="@layout/fragment_arests_list" >
         <action
@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/usersListFragment"
-        android:name="com.speechpeach.arestmanager.ui.fragments.UsersListFragment"
+        android:name="com.speechpeach.arestmanager.ui.fragments.topLevel.UsersListFragment"
         android:label="Users"
         tools:layout="@layout/fragment_users_list" >
         <action
@@ -39,8 +39,15 @@
     </fragment>
     <fragment
         android:id="@+id/createUserFragment"
-        android:name="com.speechpeach.arestmanager.ui.fragments.CreateUserFragment"
+        android:name="com.speechpeach.arestmanager.ui.fragments.users.CreateUserFragment"
         android:label="User editor">
+        <action
+            android:id="@+id/action_createUserFragment_to_localArestsListFragment"
+            app:destination="@id/localArestsListFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <argument
             android:name="user"
             app:argType="com.speechpeach.arestmanager.models.User"
@@ -48,7 +55,7 @@
     </fragment>
     <fragment
         android:id="@+id/createUserForArestFragment"
-        android:name="com.speechpeach.arestmanager.ui.fragments.CreateUserForArestFragment"
+        android:name="com.speechpeach.arestmanager.ui.fragments.arests.CreateUserForArestFragment"
         android:label="Users" >
         <action
             android:id="@+id/action_createUserForArestFragment_to_createArestFragment"
@@ -60,7 +67,7 @@
     </fragment>
     <fragment
         android:id="@+id/createArestFragment"
-        android:name="com.speechpeach.arestmanager.ui.fragments.CreateArestFragment"
+        android:name="com.speechpeach.arestmanager.ui.fragments.arests.CreateArestFragment"
         android:label="Arest editor"
         tools:layout="@layout/fragment_create_arest">
         <argument
@@ -81,7 +88,7 @@
     </fragment>
     <fragment
         android:id="@+id/editArestFragment"
-        android:name="com.speechpeach.arestmanager.ui.fragments.EditArestFragment"
+        android:name="com.speechpeach.arestmanager.ui.fragments.arests.EditArestFragment"
         android:label="Arest editor"
         tools:layout="@layout/fragment_edit_arest">
         <action
@@ -94,10 +101,13 @@
         <argument
             android:name="arest"
             app:argType="com.speechpeach.arestmanager.models.Arest" />
+        <argument
+            android:name="isEditable"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/selectUserFragment"
-        android:name="com.speechpeach.arestmanager.ui.fragments.SelectUserFragment"
+        android:name="com.speechpeach.arestmanager.ui.fragments.users.SelectUserFragment"
         android:label="User selector"
         tools:layout="@layout/fragment_select_user">
         <action
@@ -112,5 +122,21 @@
         <argument
             android:name="arest"
             app:argType="com.speechpeach.arestmanager.models.Arest" />
+    </fragment>
+    <fragment
+        android:id="@+id/localArestsListFragment"
+        android:name="com.speechpeach.arestmanager.ui.fragments.users.LocalArestsListFragment"
+        android:label="Arests"
+        tools:layout="@layout/fragment_local_arests_list">
+        <action
+            android:id="@+id/action_localArestsListFragment_to_editArestFragment"
+            app:destination="@id/editArestFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="id"
+            app:argType="integer" />
     </fragment>
 </navigation>

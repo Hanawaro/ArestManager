@@ -15,7 +15,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ArestRepository @Inject constructor(private val service: ArestService) : Callback<ArestResponse> {
+class ArestRepository @Inject constructor(private val service: ArestService) {
 
     fun get(id: Int) : MutableLiveData<Arest> {
         val result = MutableLiveData<Arest>()
@@ -44,6 +44,26 @@ class ArestRepository @Inject constructor(private val service: ArestService) : C
                 if (response.isSuccessful) {
                     result.value = response.body()?.arests ?: ArrayList()
 
+                }
+            }
+
+            override fun onFailure(call: Call<ArestResponse>, t: Throwable) {
+
+            }
+        })
+
+        return result
+    }
+
+    fun getLocal(userID: Int) : MutableLiveData<List<Arest>> {
+
+        val result = MutableLiveData<List<Arest>>()
+
+        val response = service.getLocal(userID)
+        response.enqueue(object : Callback<ArestResponse> {
+            override fun onResponse(call: Call<ArestResponse>, response: Response<ArestResponse>) {
+                if (response.isSuccessful) {
+                    result.value = response.body()?.arests ?: ArrayList()
                 }
             }
 
@@ -116,7 +136,10 @@ class ArestRepository @Inject constructor(private val service: ArestService) : C
     }
 
 
-    fun update(arest: Arest) {
+    fun update(arest: Arest): MutableLiveData<Boolean>{
+
+        val result = MutableLiveData<Boolean>()
+
         val response = service.update(
             id = arest.id,
             name = arest.name,
@@ -128,15 +151,36 @@ class ArestRepository @Inject constructor(private val service: ArestService) : C
             userID = arest.userID
         )
 
-        response.enqueue(this)
+        response.enqueue(object : Callback<ArestResponse> {
+            override fun onResponse(call: Call<ArestResponse>, response: Response<ArestResponse>) {
+                if (response.isSuccessful) {
+                    result.value = true
+                }
+            }
+
+            override fun onFailure(call: Call<ArestResponse>, t: Throwable) {
+                result.value = false
+            }
+        })
+
+        return result
     }
 
-    fun delete(id: Int) {
+    fun delete(id: Int) : MutableLiveData<Boolean>{
+        val result = MutableLiveData<Boolean>()
         val response = service.remove(id)
-        response.enqueue(this)
+        response.enqueue(object : Callback<ArestResponse> {
+            override fun onResponse(call: Call<ArestResponse>, response: Response<ArestResponse>) {
+                if (response.isSuccessful) {
+                    result.value = true
+                }
+            }
+
+            override fun onFailure(call: Call<ArestResponse>, t: Throwable) {
+                result.value = false
+            }
+        })
+        return result
     }
 
-
-    override fun onResponse(call: Call<ArestResponse>, response: Response<ArestResponse>) {  }
-    override fun onFailure(call: Call<ArestResponse>, t: Throwable) {  }
 }

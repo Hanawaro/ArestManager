@@ -7,7 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.speechpeach.arestmanager.databinding.ItemUserBinding
 import com.speechpeach.arestmanager.models.User
-import java.util.*
+import com.speechpeach.arestmanager.utils.view.QuickCalendar
+import com.speechpeach.arestmanager.utils.view.day
+import com.speechpeach.arestmanager.utils.view.month
+import com.speechpeach.arestmanager.utils.view.year
 
 class UsersAdapter(private val itemClickListener: ItemClickListener) : ListAdapter<User, UsersAdapter.ViewHolder>(DiffCallback()) {
 
@@ -36,14 +39,10 @@ class UsersAdapter(private val itemClickListener: ItemClickListener) : ListAdapt
 
         fun bind(user: User) {
             binding.apply {
-                val calendar = Calendar.getInstance().apply {
-                    time = Date(user.date * 1000)
-                }
-                val day = calendar.get(Calendar.DAY_OF_MONTH)
-                val month = calendar.get(Calendar.MONTH) + 1
-                val year = calendar.get(Calendar.YEAR)
 
-                userDate.text = ("$day/$month/$year")
+                val calendar = QuickCalendar.get(user.date)
+
+                userDate.text = ("${calendar.day()}/${calendar.month()}/${calendar.year()}")
                 userFullName.text = ("${user.secondName} ${user.name}")
                 userPassport.text = ("${user.number} ${user.set}")
             }
@@ -51,7 +50,7 @@ class UsersAdapter(private val itemClickListener: ItemClickListener) : ListAdapt
 
     }
 
-    class DiffCallback() : DiffUtil.ItemCallback<User>() {
+    class DiffCallback : DiffUtil.ItemCallback<User>() {
         override fun areItemsTheSame(oldItem: User, newItem: User) =
             oldItem.id == newItem.id
 

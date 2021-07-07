@@ -1,13 +1,12 @@
-package com.speechpeach.arestmanager.viewmodels
+package com.speechpeach.arestmanager.viewmodels.arests
 
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.speechpeach.arestmanager.models.Arest
 import com.speechpeach.arestmanager.models.User
 import com.speechpeach.arestmanager.repository.ArestRepository
-import com.speechpeach.arestmanager.repository.UserRepository
+import com.speechpeach.arestmanager.utils.ValueConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
@@ -39,7 +38,7 @@ class CreateArestViewModel @Inject constructor(
 
     fun changePassport(organization: Int, user: User) {
         when(organization) {
-            17 -> when(user.type) {
+            ValueConstants.Organization.FSSP -> when(user.type) {
                 User.Type.Passport.toString() ->
                     _passport.value = "${user.set / 100} ${user.set % 100} ${user.number}"
 
@@ -47,7 +46,7 @@ class CreateArestViewModel @Inject constructor(
                     _passport.value = "${user.set} ${user.number}"
             }
 
-            39 -> when(user.type) {
+            ValueConstants.Organization.FNS -> when(user.type) {
                 User.Type.Passport.toString() ->
                     _passport.value = "${user.number}-${user.set}"
                 User.Type.InternationalPassport.toString() ->

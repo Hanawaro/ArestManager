@@ -1,4 +1,4 @@
-package com.speechpeach.arestmanager.ui.fragments
+package com.speechpeach.arestmanager.ui.fragments.topLevel
 
 import android.os.Bundle
 import android.view.*
@@ -13,7 +13,7 @@ import com.speechpeach.arestmanager.databinding.FragmentArestsListBinding
 import com.speechpeach.arestmanager.models.Arest
 import com.speechpeach.arestmanager.utils.adapters.ArestsAdapter
 import com.speechpeach.arestmanager.utils.hideKeyboard
-import com.speechpeach.arestmanager.viewmodels.ArestViewModel
+import com.speechpeach.arestmanager.viewmodels.topLevel.ArestViewModel
 import com.speechpeach.arestmanager.viewmodels.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,16 +27,10 @@ class ArestsListFragment : Fragment(R.layout.fragment_arests_list) {
 
     private lateinit var arestAdapter: ArestsAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentArestsListBinding.inflate(inflater, container, false)
-
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,47 +38,7 @@ class ArestsListFragment : Fragment(R.layout.fragment_arests_list) {
         setHasOptionsMenu(true)
         hideKeyboard()
 
-        val onItemClickListener = object : ArestsAdapter.ItemClickListener {
-            override fun onItemClick(arest: Arest) {
-                val action = ArestsListFragmentDirections.actionArestsListFragmentToEditArestFragment(arest)
-                findNavController().navigate(action)
-            }
-
-            override fun onItemLongClick(arest: Arest): Boolean {
-                AlertDialog.Builder(requireContext())
-                        .setMessage("\nDo you want to delete ${arest.name}\n")
-                        .setPositiveButton("Delete") { _, _ ->
-                            viewModel.deleteArest(arest)
-                            val arests = ArrayList(arestAdapter.currentList)
-                            arests.remove(arest)
-                            arestAdapter.submitList(arests)
-                        }
-                        .setNegativeButton("Cancel") { _, _ -> }
-                        .create().show()
-                return true
-            }
-
-        }
-
-        arestAdapter = ArestsAdapter(onItemClickListener)
-
-        binding.recyclerArests.apply {
-            adapter = arestAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
-        }
-
-        binding.refreshLayoutArests.apply {
-
-            setOnRefreshListener {
-                viewModel.arests.observe(viewLifecycleOwner) {
-                    arestAdapter.submitList(it)
-                    isRefreshing = false
-                }
-            }
-
-        }
-
+        initAdapter()
     }
 
     override fun onResume() {
@@ -107,6 +61,51 @@ class ArestsListFragment : Fragment(R.layout.fragment_arests_list) {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun initAdapter() {
+        val onItemClickListener = object : ArestsAdapter.ItemClickListener {
+            override fun onItemClick(arest: Arest) {
+                val action = ArestsListFragmentDirections.actionArestsListFragmentToEditArestFragment(arest, true)
+                findNavController().navigate(action)
+            }
+
+            override fun onItemLongClick(arest: Arest): Boolean {
+                AlertDialog.Builder(requireContext())
+                        .setMessage("\nDo you want to delete ${arest.name}\n")
+                        .setPositiveButton("Delete") { _, _ ->
+                            viewModel.deleteArest(arest).observe(viewLifecycleOwner) {
+                                viewModel.arests.observe(viewLifecycleOwner) {
+                                    arestAdapter.submitList(it)
+                                }
+                            }
+                        }
+                        .setNegativeButton("Cancel") { _, _ -> }
+                        .create()
+                        .show()
+                return true
+            }
+
+        }
+
+        arestAdapter = ArestsAdapter(onItemClickListener)
+
+        binding.recyclerArests.apply {
+            adapter = arestAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+        }
+
+        binding.refreshLayoutArests.apply {
+
+            setOnRefreshListener {
+                viewModel.arests.observe(viewLifecycleOwner) {
+                    arestAdapter.submitList(it)
+                    isRefreshing = false
+                }
+            }
+
         }
     }
 

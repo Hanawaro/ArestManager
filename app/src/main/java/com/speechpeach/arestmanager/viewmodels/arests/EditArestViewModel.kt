@@ -1,4 +1,4 @@
-package com.speechpeach.arestmanager.viewmodels
+package com.speechpeach.arestmanager.viewmodels.arests
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

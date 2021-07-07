@@ -1,9 +1,7 @@
-package com.speechpeach.arestmanager.viewmodels
+package com.speechpeach.arestmanager.viewmodels.arests
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.speechpeach.arestmanager.models.User
 import com.speechpeach.arestmanager.repository.UserRepository

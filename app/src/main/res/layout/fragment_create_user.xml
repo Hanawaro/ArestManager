@@ -2,13 +2,20 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.speechpeach.arestmanager.ui.fragments.CreateUserFragment" >
+    tools:context="com.speechpeach.arestmanager.ui.fragments.users.CreateUserFragment" >
 
     <data>
         <import type="android.text.InputType" />
+        <import type="android.view.View"/>
         <variable
             name="user"
             type="com.speechpeach.arestmanager.models.User" />
+        <variable
+            name="isNewUser"
+            type="Boolean" />
+        <variable
+            name="fragment"
+            type="com.speechpeach.arestmanager.ui.fragments.users.CreateUserFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -165,6 +172,17 @@
                 android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/show_arests_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show arests"
+            android:visibility="@{isNewUser ? View.GONE : View.VISIBLE}"
+            android:layout_margin="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:onClick="@{() -> fragment.showArests()}"/>
 
         <Button
             android:id="@+id/submit_button"

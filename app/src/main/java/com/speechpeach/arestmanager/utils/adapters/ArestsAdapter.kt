@@ -7,8 +7,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.speechpeach.arestmanager.databinding.ItemArestBinding
 import com.speechpeach.arestmanager.models.Arest
-import com.speechpeach.arestmanager.utils.RetrofitConstants
-import java.util.*
+import com.speechpeach.arestmanager.utils.ValueConstants
+import com.speechpeach.arestmanager.utils.view.QuickCalendar
+import com.speechpeach.arestmanager.utils.view.day
+import com.speechpeach.arestmanager.utils.view.month
+import com.speechpeach.arestmanager.utils.view.year
+import com.speechpeach.arestmanager.utils.toArestStatusType
 
 class ArestsAdapter(private val itemClickListener: ItemClickListener) : ListAdapter<Arest, ArestsAdapter.ViewHolder>(DiffCallback()) {
 
@@ -37,28 +41,24 @@ class ArestsAdapter(private val itemClickListener: ItemClickListener) : ListAdap
 
         fun bind(arest: Arest) {
             binding.apply {
-                val calendar = Calendar.getInstance().apply {
-                    time = Date(arest.date * 1000)
-                }
-                val day = calendar.get(Calendar.DAY_OF_MONTH)
-                val month = calendar.get(Calendar.MONTH) + 1
-                val year = calendar.get(Calendar.YEAR)
 
-                arestDate.text = ("$day/$month/$year")
-                arestName.text = RetrofitConstants.codes[arest.name]
+                val calendar = QuickCalendar.get(arest.date)
+
+                arestDate.text = ("${calendar.day()}/${calendar.month()}/${calendar.year()}")
+                arestName.text = ValueConstants.Organization.codes[arest.name]
                 arestOwner.text = ("${arest.userSecondName} ${arest.userSecondName}")
-                arestStatus.text = when(arest.status) {
-                    Arest.Type.Active.toString() -> "Active"
-                    Arest.Type.Canceled.toString() -> "Canceled"
-                    Arest.Type.Completed.toString() -> "Completed"
-                    else -> ""
+
+                arestStatus.text = when(arest.status.toArestStatusType()) {
+                    Arest.Type.Active    -> ValueConstants.ArestStatus.active
+                    Arest.Type.Canceled  -> ValueConstants.ArestStatus.canceled
+                    Arest.Type.Completed -> ValueConstants.ArestStatus.completed
                 }
             }
         }
 
     }
 
-    class DiffCallback() : DiffUtil.ItemCallback<Arest>() {
+    class DiffCallback : DiffUtil.ItemCallback<Arest>() {
         override fun areItemsTheSame(oldItem: Arest, newItem: Arest) =
             oldItem.id == newItem.id
 

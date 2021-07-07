@@ -2,13 +2,10 @@ package com.speechpeach.arestmanager.utils.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
-import android.view.View
 import android.widget.RelativeLayout
 import androidx.core.view.forEach
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -53,9 +50,6 @@ class BottomNavigationView : BottomNavigationView {
     private fun show() {
 
         val params = (this.layoutParams as RelativeLayout.LayoutParams)
-
-//        if (params.bottomMargin == 0)
-//            return
 
         this.animate()
                 .setInterpolator(FastOutSlowInInterpolator())

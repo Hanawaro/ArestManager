@@ -1,4 +1,4 @@
-package com.speechpeach.arestmanager.ui.fragments
+package com.speechpeach.arestmanager.ui.fragments.arests
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -8,19 +8,15 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.speechpeach.arestmanager.R
 import com.speechpeach.arestmanager.databinding.FragmentCreateArestBinding
 import com.speechpeach.arestmanager.models.Arest
-import com.speechpeach.arestmanager.models.User
-import com.speechpeach.arestmanager.utils.RetrofitConstants
+import com.speechpeach.arestmanager.utils.ValueConstants
 import com.speechpeach.arestmanager.utils.hideKeyboard
-import com.speechpeach.arestmanager.viewmodels.CreateArestViewModel
-import com.speechpeach.arestmanager.viewmodels.CreateUserForArestViewModel
-import com.speechpeach.arestmanager.viewmodels.MainActivityViewModel
+import com.speechpeach.arestmanager.viewmodels.arests.CreateArestViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import kotlin.collections.ArrayList
@@ -111,20 +107,20 @@ class CreateArestFragment: Fragment(R.layout.fragment_create_arest) {
         binding.spinnerType.adapter = ArrayAdapter(
                 requireContext(),
                 R.layout.item_dropdown_type,
-                ArrayList(RetrofitConstants.codes.values)
+                ArrayList(ValueConstants.Organization.codes.values)
         )
 
         binding.spinnerType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
                 when (parent?.getItemAtPosition(position)?.toString()) {
-                    RetrofitConstants.codes[17] -> {
-                        viewModel.organization = 17
-                        viewModel.changePassport(17, args.user)
+                    ValueConstants.Organization.codes[ValueConstants.Organization.FSSP] -> {
+                        viewModel.organization = ValueConstants.Organization.FSSP
+                        viewModel.changePassport(ValueConstants.Organization.FSSP, args.user)
                     }
-                    RetrofitConstants.codes[39] -> {
-                        viewModel.organization = 39
-                        viewModel.changePassport(39, args.user)
+                    ValueConstants.Organization.codes[ValueConstants.Organization.FNS] -> {
+                        viewModel.organization = ValueConstants.Organization.FNS
+                        viewModel.changePassport(ValueConstants.Organization.FNS, args.user)
                     }
                 }
 

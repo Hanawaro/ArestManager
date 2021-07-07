@@ -1,4 +1,4 @@
-package com.speechpeach.arestmanager.viewmodels
+package com.speechpeach.arestmanager.viewmodels.topLevel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -17,8 +17,8 @@ class ArestViewModel @Inject constructor(
     val arests: LiveData<List<Arest>>
         get() = repository.getAll()
 
-    fun deleteArest(arest: Arest) {
-        repository.delete(arest.id)
+    fun deleteArest(arest: Arest): LiveData<Boolean> {
+        return repository.delete(arest.id)
     }
 
 }

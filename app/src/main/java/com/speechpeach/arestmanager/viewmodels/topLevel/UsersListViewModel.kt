@@ -1,4 +1,4 @@
-package com.speechpeach.arestmanager.viewmodels
+package com.speechpeach.arestmanager.viewmodels.topLevel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,15 +9,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class UsersViewModel @Inject constructor(
+class UsersListViewModel @Inject constructor(
         private val repository: UserRepository
 ): ViewModel() {
 
     val users: LiveData<List<User>>
         get() = repository.getAll()
 
-    fun deleteUser(user: User) {
-        repository.delete(user.id)
+    fun deleteUser(user: User) : LiveData<Boolean> {
+        return repository.delete(user.id)
     }
 
 }

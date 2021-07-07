@@ -1,10 +1,8 @@
-package com.speechpeach.arestmanager.ui.fragments
+package com.speechpeach.arestmanager.ui.fragments.users
 
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -13,9 +11,7 @@ import com.speechpeach.arestmanager.R
 import com.speechpeach.arestmanager.databinding.FragmentSelectUserBinding
 import com.speechpeach.arestmanager.models.User
 import com.speechpeach.arestmanager.utils.adapters.UsersAdapter
-import com.speechpeach.arestmanager.utils.hideKeyboard
-import com.speechpeach.arestmanager.viewmodels.SelectUserViewModel
-import com.speechpeach.arestmanager.viewmodels.UsersViewModel
+import com.speechpeach.arestmanager.viewmodels.users.SelectUserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,11 +40,11 @@ class SelectUserFragment: Fragment(R.layout.fragment_select_user) {
         val onItemClickListener = object : UsersAdapter.ItemClickListener {
             override fun onItemClick(user: User) {
                 val action = SelectUserFragmentDirections.actionSelectUserFragmentToEditArestFragment2(
-                    args.arest.copy(
-                            userID = user.id,
-                            userName = user.name,
-                            userSecondName = user.secondName
-                    )
+                        args.arest.copy(
+                                userID = user.id,
+                                userName = user.name,
+                                userSecondName = user.secondName
+                        ), true
                 )
                 findNavController().navigate(action)
             }
