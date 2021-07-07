@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.speechpeach.arestmanager.ui.fragments.CreateArestFragment">
+
+    <data>
+        <import type="android.text.InputType" />
+        <variable
+            name="status"
+            type="String" />
+        <variable
+            name="viewmodel"
+            type="com.speechpeach.arestmanager.viewmodels.CreateArestViewModel" />
+        <variable
+            name="fragment"
+            type="com.speechpeach.arestmanager.ui.fragments.CreateArestFragment" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp">
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner_type"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/spinner"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dateField"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Date"
+            app:expandedHintEnabled="false"
+            android:layout_marginTop="20dp"
+            app:errorEnabled="true"
+            app:layout_constraintTop_toBottomOf="@id/spinner_type">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dateTextField"
+                android:inputType="@{InputType.TYPE_NULL}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/numberField"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Number"
+            app:expandedHintEnabled="false"
+            android:layout_marginTop="20dp"
+            app:errorEnabled="true"
+            app:counterEnabled="true"
+            app:counterMaxLength="30"
+            app:layout_constraintTop_toBottomOf="@id/dateField">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/numberTextField"
+                android:layout_width="match_parent"
+                android:maxLength="30"
+                android:digits="АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#№-"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/baseField"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Base"
+            app:errorEnabled="true"
+            app:expandedHintEnabled="false"
+            app:counterEnabled="true"
+            app:counterMaxLength="1000"
+            app:layout_constraintTop_toBottomOf="@id/numberField">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/baseTextField"
+                android:layout_width="match_parent"
+                android:maxLength="1000"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/sumField"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Sum"
+            app:errorEnabled="true"
+            app:expandedHintEnabled="false"
+            app:layout_constraintTop_toBottomOf="@id/baseField">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/sumTextField"
+                android:layout_width="match_parent"
+                android:inputType="number"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/statusField"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Status"
+            android:enabled="false"
+            app:expandedHintEnabled="false"
+            app:layout_constraintTop_toBottomOf="@id/sumField">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/statusTextField"
+                android:layout_width="match_parent"
+                android:text="@{status}"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passportField"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Status"
+            android:enabled="false"
+            app:expandedHintEnabled="false"
+            app:layout_constraintTop_toBottomOf="@id/statusField">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passportTextField"
+                android:layout_width="match_parent"
+                android:text="@{viewmodel.passport}"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="submit"
+            android:layout_margin="20dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:onClick="@{() -> fragment.onSubmit()}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

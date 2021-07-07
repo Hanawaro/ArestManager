@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.speechpeach.arestmanager.ui.fragments.CreateUserForArestFragment">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewmodel"
+            type="com.speechpeach.arestmanager.viewmodels.CreateUserForArestViewModel" />
+        <variable
+            name="fragment"
+            type="com.speechpeach.arestmanager.ui.fragments.CreateUserForArestFragment" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:padding="20dp">
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/spinner"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <include
+                    android:id="@+id/layout_create_user"
+                    layout="@layout/layout_create_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintTop_toBottomOf="@id/spinner_type"
+                    app:viewmodel="@{viewmodel}" />
+
+                <View
+                    android:id="@+id/view_offset"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:visibility="@{viewmodel.isUsersHidden ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toBottomOf="@id/layout_create_user" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <include
+            android:id="@+id/layout_users_list"
+            layout="@layout/layout_users_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="75dp"
+            app:viewmodel="@{viewmodel}" />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_marginTop="20dp"
+            android:text="next"
+            android:visibility="@{viewmodel.isUsersHidden ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:onClick="@{() -> fragment.onSubmit()}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

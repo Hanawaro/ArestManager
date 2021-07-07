@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/arest_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="textStart"
+        android:textSize="18sp"
+        android:paddingBottom="10dp"
+        tools:text="Organization"/>
+
+    <TextView
+        android:id="@+id/arest_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="textStart"
+        android:textSize="14sp"
+        android:paddingBottom="10dp"
+        tools:text="XX/XX/XXXX"/>
+
+    <TextView
+        android:id="@+id/arest_owner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/arest_name"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="textStart"
+        android:textSize="16sp"
+        tools:text="Name SecondName"/>
+
+    <TextView
+        android:id="@+id/arest_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/arest_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="textStart"
+        android:textSize="14sp"
+        tools:text="Status"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

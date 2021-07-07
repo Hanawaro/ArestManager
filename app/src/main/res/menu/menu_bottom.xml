@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/arestsListFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_arests"
+        android:title="arests"/>
+
+    <item
+        android:id="@+id/usersListFragment"
+        android:icon="@drawable/ic_users"
+        android:enabled="true"
+        android:title="users"/>
+</menu>
