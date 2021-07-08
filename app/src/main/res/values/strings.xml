@@ -7,5 +7,16 @@
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
-    <string name="hello_world">Hello Square World!</string>
+    <string name="show_arests">Show arests</string>
+    <string name="submit">submit</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="birthplace">Birthplace</string>
+    <string name="document_set">Set</string>
+    <string name="document_number">Number</string>
+    <string name="registration_arest_date">Registration date</string>
+    <string name="registration_arest_number">Registration number</string>
+    <string name="base">Base</string>
+    <string name="sum">Sum</string>
+    <string name="arest_status">Status</string>
+    <string name="next">next</string>
 </resources>

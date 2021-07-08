@@ -10,31 +10,35 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.speechpeach.arestmanager.R
-import com.speechpeach.arestmanager.databinding.FragmentLocalArestsListBinding
+import com.speechpeach.arestmanager.databinding.FragmentUserArestsListBinding
 import com.speechpeach.arestmanager.models.Arest
 import com.speechpeach.arestmanager.utils.adapters.ArestsAdapter
-import com.speechpeach.arestmanager.viewmodels.users.LocalArestsListViewModel
+import com.speechpeach.arestmanager.viewmodels.users.UserArestsListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LocalArestsListFragment: Fragment(R.layout.fragment_local_arests_list) {
+class UserArestsListFragment: Fragment(R.layout.fragment_user_arests_list) {
 
-    private lateinit var binding: FragmentLocalArestsListBinding
-    private val args: LocalArestsListFragmentArgs by navArgs()
+    private lateinit var binding: FragmentUserArestsListBinding
+    private val args: UserArestsListFragmentArgs by navArgs()
 
-    private val viewModel: LocalArestsListViewModel by viewModels()
+    private val viewModel: UserArestsListViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentLocalArestsListBinding.inflate(inflater, container, false)
+        binding = FragmentUserArestsListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initAdapter()
+    }
+
+    private fun initAdapter() {
         val onItemClickListener = object : ArestsAdapter.ItemClickListener {
             override fun onItemClick(arest: Arest) {
-                val action = LocalArestsListFragmentDirections.actionLocalArestsListFragmentToEditArestFragment(arest, false)
+                val action = UserArestsListFragmentDirections.actionUserArestsListFragmentToLetArestFragment(arest, false)
                 findNavController().navigate(action)
             }
 
@@ -53,7 +57,6 @@ class LocalArestsListFragment: Fragment(R.layout.fragment_local_arests_list) {
         viewModel.getArests(args.id).observe(viewLifecycleOwner) {
             arestAdapter.submitList(it)
         }
-
     }
 
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.speechpeach.arestmanager.models.User
 import com.speechpeach.arestmanager.repository.UserRepository
+import com.speechpeach.arestmanager.utils.QuickCalendar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
@@ -14,31 +15,23 @@ class CreateUserForArestViewModel @Inject constructor(
         private val repository: UserRepository
 ): ViewModel() {
 
-    val chooseUserValue = "Choose user"
-    val createUserValue = "Create user"
-    val typeValues  = listOf(chooseUserValue, createUserValue)
+    lateinit var user: User
 
-    val passportValue = "Passport"
-    val internationalPassportValue = "International Passport"
-    val passportValues  = listOf(passportValue, internationalPassportValue)
-
-    val users: LiveData<List<User>>
-        get() = repository.getAll()
-
-    val userDateOfBirth: Calendar = Calendar.getInstance().apply {
-        time = Date()
-        add(Calendar.YEAR, -18)
+    fun getUsers(): LiveData<List<User>> {
+        return repository.getAll()
     }
 
-    private val _isUsersHidden = MutableLiveData(false)
-    val isUsersHidden: LiveData<Boolean> get() = _isUsersHidden
+    val userDateOfBirth: Calendar = QuickCalendar.get(dayOffset = 0, monthOffset = 0, yearOffset = -18)
 
-    fun hideUsers() {
-        _isUsersHidden.value = true
+    private val _isUsersListHidden = MutableLiveData(false)
+    val isUsersListHidden: LiveData<Boolean> get() = _isUsersListHidden
+
+    fun hideUsersList() {
+        _isUsersListHidden.value = true
     }
 
-    fun showUsers() {
-        _isUsersHidden.value = false
+    fun showUsersList() {
+        _isUsersListHidden.value = false
     }
 
 }

@@ -10,13 +10,13 @@ data class Arest(
     var id: Int = 0,
 
     @SerializedName("name")
-    val name: Int,
+    val organizationID: Int,
 
     @SerializedName("date")
-    val date: Long,
+    val registrationDate: Long,
 
     @SerializedName("number")
-    val number: String,
+    val documentNumber: String,
 
     @SerializedName("base")
     val base: String,

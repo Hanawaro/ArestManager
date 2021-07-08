@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.speechpeach.arestmanager.ui.fragments.arests.EditArestFragment">
+    tools:context="com.speechpeach.arestmanager.ui.fragments.usersAndArests.LetArestFragment">
 
     <data>
         <import type="android.text.InputType" />
@@ -15,7 +15,7 @@
             type="com.speechpeach.arestmanager.models.Arest" />
         <variable
             name="fragment"
-            type="com.speechpeach.arestmanager.ui.fragments.arests.EditArestFragment" />
+            type="com.speechpeach.arestmanager.ui.fragments.usersAndArests.LetArestFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,11 +35,11 @@
 
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/spinner_type"
-                    android:clickable="@{isEditable}"
-                    android:focusable="@{isEditable}"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:background="@drawable/spinner"
+                    android:clickable="@{isEditable}"
+                    android:focusable="@{isEditable}"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -47,21 +47,21 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Date"
+                    android:layout_marginTop="20dp"
                     android:clickable="@{isEditable}"
                     android:focusable="@{isEditable}"
-                    app:expandedHintEnabled="false"
-                    android:layout_marginTop="20dp"
+                    android:hint="@string/registration_arest_date"
                     app:errorEnabled="true"
+                    app:expandedHintEnabled="false"
                     app:layout_constraintTop_toBottomOf="@id/spinner_type">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/dateTextField"
-                        android:inputType="@{InputType.TYPE_NULL}"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:clickable="@{isEditable}"
                         android:focusable="@{isEditable}"
-                        android:layout_height="wrap_content" />
+                        android:inputType="@{InputType.TYPE_NULL}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -70,25 +70,25 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Number"
-                    app:expandedHintEnabled="false"
                     android:layout_marginTop="20dp"
-                    app:errorEnabled="true"
-                    app:counterEnabled="true"
                     android:clickable="@{isEditable}"
                     android:focusable="@{isEditable}"
+                    android:hint="@string/registration_arest_number"
+                    app:counterEnabled="true"
                     app:counterMaxLength="30"
+                    app:errorEnabled="true"
+                    app:expandedHintEnabled="false"
                     app:layout_constraintTop_toBottomOf="@id/dateField">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/numberTextField"
                         android:layout_width="match_parent"
-                        android:maxLength="30"
+                        android:layout_height="wrap_content"
                         android:clickable="@{isEditable}"
-                        android:focusable="@{isEditable}"
-                        android:text="@{arest.number}"
                         android:digits="АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#№-"
-                        android:layout_height="wrap_content" />
+                        android:focusable="@{isEditable}"
+                        android:maxLength="30"
+                        android:text="@{arest.documentNumber}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -98,23 +98,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:hint="Base"
-                    app:errorEnabled="true"
                     android:clickable="@{isEditable}"
                     android:focusable="@{isEditable}"
-                    app:expandedHintEnabled="false"
+                    android:hint="@string/base"
                     app:counterEnabled="true"
                     app:counterMaxLength="1000"
+                    app:errorEnabled="true"
+                    app:expandedHintEnabled="false"
                     app:layout_constraintTop_toBottomOf="@id/numberField">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/baseTextField"
                         android:layout_width="match_parent"
-                        android:maxLength="1000"
+                        android:layout_height="wrap_content"
                         android:clickable="@{isEditable}"
                         android:focusable="@{isEditable}"
-                        android:text="@{arest.base}"
-                        android:layout_height="wrap_content" />
+                        android:maxLength="1000"
+                        android:text="@{arest.base}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,10 +123,10 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:clickable="@{isEditable}"
                     android:focusable="@{isEditable}"
-                    android:layout_marginTop="20dp"
-                    android:hint="Sum"
+                    android:hint="@string/sum"
                     app:errorEnabled="true"
                     app:expandedHintEnabled="false"
                     app:layout_constraintTop_toBottomOf="@id/baseField">
@@ -134,11 +134,11 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/sumTextField"
                         android:layout_width="match_parent"
-                        android:inputType="number"
+                        android:layout_height="wrap_content"
                         android:clickable="@{isEditable}"
                         android:focusable="@{isEditable}"
-                        android:text="@{Integer.toString(arest.sum)}"
-                        android:layout_height="wrap_content" />
+                        android:inputType="number"
+                        android:text="@{Integer.toString(arest.sum)}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -146,10 +146,10 @@
                     android:id="@+id/spinner_status"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:clickable="@{isEditable}"
-                    android:focusable="@{isEditable}"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/spinner"
+                    android:clickable="@{isEditable}"
+                    android:focusable="@{isEditable}"
                     app:layout_constraintTop_toBottomOf="@id/sumField" />
 
 
@@ -160,8 +160,8 @@
                     android:layout_marginTop="20dp"
                     android:clickable="@{isEditable}"
                     android:focusable="@{isEditable}"
-                    app:layout_constraintTop_toBottomOf="@id/spinner_status"
-                    android:onClick="@{() -> fragment.selectUser()}">
+                    android:onClick="@{() -> fragment.selectUser()}"
+                    app:layout_constraintTop_toBottomOf="@id/spinner_status">
 
                     <include
                         android:id="@+id/layout_user"
@@ -185,12 +185,12 @@
             android:id="@+id/submit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="submit"
-            android:visibility="@{isEditable ? View.VISIBLE : View.GONE}"
             android:layout_margin="20dp"
-            app:layout_constraintRight_toRightOf="parent"
+            android:onClick="@{() -> fragment.onSubmit()}"
+            android:text="@string/submit"
+            android:visibility="@{isEditable ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:onClick="@{() -> fragment.onSubmit()}"/>
+            app:layout_constraintRight_toRightOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

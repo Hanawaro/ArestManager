@@ -1,5 +1,6 @@
 package com.speechpeach.arestmanager.ui.fragments.arests
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.InputFilter
@@ -16,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.speechpeach.arestmanager.R
 import com.speechpeach.arestmanager.databinding.FragmentCreateUserForArestBinding
 import com.speechpeach.arestmanager.models.User
+import com.speechpeach.arestmanager.utils.*
 import com.speechpeach.arestmanager.utils.adapters.UsersAdapter
-import com.speechpeach.arestmanager.utils.hideKeyboard
 import com.speechpeach.arestmanager.utils.validation.user.UserValidation
 import com.speechpeach.arestmanager.viewmodels.arests.CreateUserForArestViewModel
 import com.speechpeach.arestmanager.viewmodels.MainActivityViewModel
@@ -32,10 +33,7 @@ class CreateUserForArestFragment: Fragment(R.layout.fragment_create_user_for_are
     private val viewModel: CreateUserForArestViewModel by viewModels()
     private val activityViewModel: MainActivityViewModel by activityViewModels()
 
-    private lateinit var usersAdapter: UsersAdapter
-    private var user: User? = null
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentCreateUserForArestBinding.inflate(inflater, container, false)
 
         activityViewModel.hideBottomMenu()
@@ -52,7 +50,7 @@ class CreateUserForArestFragment: Fragment(R.layout.fragment_create_user_for_are
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initUsersRecycler()
+        initAdapter()
         initSpinner()
         initDatePicker()
     }
@@ -60,7 +58,7 @@ class CreateUserForArestFragment: Fragment(R.layout.fragment_create_user_for_are
     fun onSubmit() {
         if (validate()) {
             hideKeyboard()
-            val action = CreateUserForArestFragmentDirections.actionCreateUserForArestFragmentToCreateArestFragment(user!!, true)
+            val action = CreateUserForArestFragmentDirections.actionCreateUserForArestFragmentToCreateArestFragment(viewModel.user, true)
             findNavController().navigate(action)
         }
     }
@@ -112,20 +110,21 @@ class CreateUserForArestFragment: Fragment(R.layout.fragment_create_user_for_are
 
         try {
             if (result) {
-                user = User(
+                viewModel.user = User(
                         name = binding.layoutCreateUser.nameTextField.text.toString(),
                         secondName = binding.layoutCreateUser.secondTextNameField.text.toString(),
-                        type = when (binding.layoutCreateUser.spinnerType.getItemAtPosition(binding.layoutCreateUser.spinnerType.selectedItemPosition).toString()) {
-                            "Passport" -> User.Type.Passport.toString()
-                            else -> User.Type.InternationalPassport.toString()
+                        typeOfDocument = when (binding.layoutCreateUser.spinnerType.getItemAtPosition(binding.layoutCreateUser.spinnerType.selectedItemPosition).toString()) {
+                            ValueConstants.UserDocumentType.passport -> User.Type.Passport.toString()
+                            ValueConstants.UserDocumentType.internationalPassport -> User.Type.InternationalPassport.toString()
+                            else -> ""
                         },
-                        number = Integer.valueOf(binding.layoutCreateUser.numberTextField.text.toString()),
-                        set = Integer.valueOf(binding.layoutCreateUser.setTextField.text.toString()),
-                        date = viewModel.userDateOfBirth.time.time / 1000,
+                        passportNumber = Integer.valueOf(binding.layoutCreateUser.numberTextField.text.toString()),
+                        passportSet = Integer.valueOf(binding.layoutCreateUser.setTextField.text.toString()),
+                        dateOfBirth = viewModel.userDateOfBirth.time.time / 1000,
                         birthplace = binding.layoutCreateUser.birthplaceTextField.text.toString()
                 )
 
-                UserValidation.validate(user!!)
+                UserValidation.validate(viewModel.user)
             }
         } catch (exception: UserValidation.InvalidNumberException) {
             binding.layoutCreateUser.numberTextField.error = exception.message
@@ -138,6 +137,7 @@ class CreateUserForArestFragment: Fragment(R.layout.fragment_create_user_for_are
         return result
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initDatePicker() {
         binding.layoutCreateUser.dateTextField.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus)
@@ -147,29 +147,24 @@ class CreateUserForArestFragment: Fragment(R.layout.fragment_create_user_for_are
 
             DatePickerDialog(requireContext()).apply {
                 setOnDateSetListener { _, year, month, dayOfMonth ->
-                    viewModel.userDateOfBirth.set(Calendar.YEAR, year)
-                    viewModel.userDateOfBirth.set(Calendar.MONTH, month)
-                    viewModel.userDateOfBirth.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    viewModel.userDateOfBirth.apply {
+                        set(Calendar.YEAR, year)
+                        set(Calendar.MONTH, month)
+                        set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-                    binding.layoutCreateUser.dateTextField.text?.clear()
-                    binding.layoutCreateUser.dateTextField.setText("$dayOfMonth/${month + 1}/$year")
+                        binding.layoutCreateUser.dateTextField.setText("${day()}/${month()}/${year()}")
+                    }
                     binding.layoutCreateUser.dateTextField.error = null
                 }
                 setOnDismissListener {
                     binding.layoutCreateUser.dateField.clearFocus()
                 }
 
+                viewModel.userDateOfBirth.apply {
+                    datePicker.updateDate(year(), calendarMonth(), day())
+                }
 
-                val day = viewModel.userDateOfBirth.get(Calendar.DAY_OF_MONTH)
-                val month = viewModel.userDateOfBirth.get(Calendar.MONTH)
-                val year = viewModel.userDateOfBirth.get(Calendar.YEAR)
-
-                datePicker.updateDate(year, month, day)
-
-                datePicker.maxDate = Calendar.getInstance().apply {
-                    time = Date()
-                    add(Calendar.YEAR, -18)
-                }.time.time
+                datePicker.maxDate = QuickCalendar.get(dayOffset = 0, monthOffset = 0, yearOffset = -18).time.time
 
                 show()
             }
@@ -178,14 +173,18 @@ class CreateUserForArestFragment: Fragment(R.layout.fragment_create_user_for_are
 
     private fun initSpinner() {
 
-        binding.spinnerType.adapter = ArrayAdapter(requireContext(), R.layout.item_dropdown_type, viewModel.typeValues)
+        binding.spinnerType.adapter = ArrayAdapter(
+                requireContext(),
+                R.layout.item_dropdown_type,
+                ValueConstants.ArestCreatedMethod.values
+        )
 
         binding.spinnerType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
                 when (parent?.getItemAtPosition(position)?.toString()) {
-                    viewModel.chooseUserValue -> viewModel.showUsers()
-                    viewModel.createUserValue -> viewModel.hideUsers()
+                    ValueConstants.ArestCreatedMethod.chooseUser -> viewModel.showUsersList()
+                    ValueConstants.ArestCreatedMethod.createUser -> viewModel.hideUsersList()
                 }
 
             }
@@ -193,22 +192,29 @@ class CreateUserForArestFragment: Fragment(R.layout.fragment_create_user_for_are
             override fun onNothingSelected(parent: AdapterView<*>?) {  }
         }
 
-        binding.layoutCreateUser.spinnerType.adapter = ArrayAdapter(requireContext(), R.layout.item_dropdown_type, viewModel.passportValues)
+        binding.layoutCreateUser.spinnerType.adapter = ArrayAdapter(
+                requireContext(),
+                R.layout.item_dropdown_type,
+                ValueConstants.UserDocumentType.values
+        )
 
         binding.layoutCreateUser.spinnerType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
-                binding.layoutCreateUser.numberTextField.text?.clear()
-                binding.layoutCreateUser.setTextField.text?.clear()
-
-                when (parent?.getItemAtPosition(position)?.toString()) {
-                    viewModel.passportValue -> {
-                        binding.layoutCreateUser.numberTextField.filters = arrayOf( InputFilter.LengthFilter(6) )
-                        binding.layoutCreateUser.setTextField.filters = arrayOf( InputFilter.LengthFilter(4) )
-                    }
-                    viewModel.internationalPassportValue -> {
-                        binding.layoutCreateUser.numberTextField.filters = arrayOf( InputFilter.LengthFilter(6) )
-                        binding.layoutCreateUser.setTextField.filters = arrayOf( InputFilter.LengthFilter(2) )
+                ValueConstants.UserDocumentType.apply {
+                    when (parent?.getItemAtPosition(position)?.toString()) {
+                        passport -> {
+                            resetPassportFields(
+                                    numberCount = countNumberLimit[passport]!!,
+                                    setCount = countSetLimit[passport]!!
+                            )
+                        }
+                        internationalPassport -> {
+                            resetPassportFields(
+                                    numberCount = countNumberLimit[internationalPassport]!!,
+                                    setCount = countSetLimit[internationalPassport]!!
+                            )
+                        }
                     }
                 }
 
@@ -218,7 +224,9 @@ class CreateUserForArestFragment: Fragment(R.layout.fragment_create_user_for_are
         }
     }
 
-    private fun initUsersRecycler() {
+    private fun initAdapter() {
+        lateinit var usersAdapter: UsersAdapter
+
         val onItemClickListener = object : UsersAdapter.ItemClickListener {
             override fun onItemClick(user: User) {
                 val action = CreateUserForArestFragmentDirections.actionCreateUserForArestFragmentToCreateArestFragment(user, false)
@@ -235,8 +243,18 @@ class CreateUserForArestFragment: Fragment(R.layout.fragment_create_user_for_are
             setHasFixedSize(true)
         }
 
-        viewModel.users.observe(viewLifecycleOwner) {
+        viewModel.getUsers().observe(viewLifecycleOwner) {
             usersAdapter.submitList(it)
+        }
+    }
+
+    private fun resetPassportFields(numberCount: Int, setCount: Int) {
+        binding.layoutCreateUser.numberTextField.filters = arrayOf( InputFilter.LengthFilter(numberCount) )
+        binding.layoutCreateUser.setTextField.filters = arrayOf( InputFilter.LengthFilter(setCount) )
+
+        if (binding.layoutCreateUser.setTextField.text.toString().length != setCount) {
+            binding.layoutCreateUser.numberTextField.text?.clear()
+            binding.layoutCreateUser.setTextField.text?.clear()
         }
     }
 

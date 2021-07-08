@@ -51,7 +51,7 @@
                     android:id="@+id/view_offset"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:visibility="@{viewmodel.isUsersHidden ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewmodel.isUsersListHidden ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toBottomOf="@id/layout_create_user" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -71,8 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:layout_marginTop="20dp"
-            android:text="next"
-            android:visibility="@{viewmodel.isUsersHidden ? View.VISIBLE : View.GONE}"
+            android:text="@string/next"
+            android:visibility="@{viewmodel.isUsersListHidden ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:onClick="@{() -> fragment.onSubmit()}"/>

@@ -16,16 +16,16 @@ data class User(
     val secondName: String,
 
     @SerializedName("type")
-    val type: String,
+    val typeOfDocument: String,
 
     @SerializedName("number")
-    val number: Int,
+    val passportNumber: Int,
 
     @SerializedName("set")
-    val set: Int,
+    val passportSet: Int,
 
     @SerializedName("date")
-    val date: Long,
+    val dateOfBirth: Long,
 
     @SerializedName("birthplace")
     val birthplace: String

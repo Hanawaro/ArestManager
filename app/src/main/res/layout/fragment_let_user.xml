@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.speechpeach.arestmanager.ui.fragments.users.LetUserFragment">
+
+    <data>
+        <import type="android.text.InputType" />
+        <import type="android.view.View"/>
+        <variable
+            name="user"
+            type="com.speechpeach.arestmanager.models.User" />
+        <variable
+            name="isNewUser"
+            type="Boolean" />
+        <variable
+            name="fragment"
+            type="com.speechpeach.arestmanager.ui.fragments.users.LetUserFragment" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:padding="20dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nameField"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/UserName"
+                app:counterEnabled="true"
+                app:counterMaxLength="100"
+                app:errorEnabled="true"
+                app:expandedHintEnabled="false"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
+                    android:maxLength="100"
+                    android:text='@{user != null ? user.name : ""}' />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/secondNameField"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/UserSecondName"
+                app:counterEnabled="true"
+                app:counterMaxLength="100"
+                app:errorEnabled="true"
+                app:expandedHintEnabled="false"
+                app:layout_constraintTop_toBottomOf="@id/nameField">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/secondTextNameField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
+                    android:maxLength="100"
+                    android:text='@{user != null ? user.secondName : ""}' />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinner_type"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/spinner"
+                app:layout_constraintTop_toBottomOf="@id/secondNameField" />
+
+            <LinearLayout
+                android:id="@+id/passport_data_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                app:layout_constraintTop_toBottomOf="@id/spinner_type">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/numberField"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="6"
+                    android:hint="@string/document_number"
+                    app:errorEnabled="true"
+                    app:expandedHintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/numberTextField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text='@{user != null ? Integer.toString(user.passportNumber) : ""}' />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/setField"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:hint="@string/document_set"
+                    app:errorEnabled="true"
+                    app:expandedHintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/setTextField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text='@{user != null ? Integer.toString(user.passportSet) : ""}' />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dateField"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/date_of_birth"
+                app:errorEnabled="true"
+                app:expandedHintEnabled="false"
+                app:layout_constraintTop_toBottomOf="@id/passport_data_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dateTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="@{InputType.TYPE_NULL}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/birthplaceField"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/birthplace"
+                app:counterEnabled="true"
+                app:counterMaxLength="200"
+                app:errorEnabled="true"
+                app:expandedHintEnabled="false"
+                app:layout_constraintTop_toBottomOf="@id/dateField">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/birthplaceTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="200"
+                    android:text='@{user != null ? user.birthplace : ""}' />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/show_arests_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:onClick="@{() -> fragment.showArests()}"
+            android:text="@string/show_arests"
+            android:visibility="@{isNewUser ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:onClick="@{() -> fragment.submit()}"
+            android:text="@string/submit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

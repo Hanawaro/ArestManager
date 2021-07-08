@@ -13,8 +13,9 @@ class UsersListViewModel @Inject constructor(
         private val repository: UserRepository
 ): ViewModel() {
 
-    val users: LiveData<List<User>>
-        get() = repository.getAll()
+    fun  getUsers(): LiveData<List<User>> {
+        return repository.getAll()
+    }
 
     fun deleteUser(user: User) : LiveData<Boolean> {
         return repository.delete(user.id)

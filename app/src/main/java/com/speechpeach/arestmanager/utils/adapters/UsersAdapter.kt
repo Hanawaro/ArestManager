@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.speechpeach.arestmanager.databinding.ItemUserBinding
 import com.speechpeach.arestmanager.models.User
-import com.speechpeach.arestmanager.utils.view.QuickCalendar
-import com.speechpeach.arestmanager.utils.view.day
-import com.speechpeach.arestmanager.utils.view.month
-import com.speechpeach.arestmanager.utils.view.year
+import com.speechpeach.arestmanager.utils.QuickCalendar
+import com.speechpeach.arestmanager.utils.day
+import com.speechpeach.arestmanager.utils.month
+import com.speechpeach.arestmanager.utils.year
 
 class UsersAdapter(private val itemClickListener: ItemClickListener) : ListAdapter<User, UsersAdapter.ViewHolder>(DiffCallback()) {
 
@@ -40,11 +40,11 @@ class UsersAdapter(private val itemClickListener: ItemClickListener) : ListAdapt
         fun bind(user: User) {
             binding.apply {
 
-                val calendar = QuickCalendar.get(user.date)
+                val calendar = QuickCalendar.get(user.dateOfBirth)
 
                 userDate.text = ("${calendar.day()}/${calendar.month()}/${calendar.year()}")
                 userFullName.text = ("${user.secondName} ${user.name}")
-                userPassport.text = ("${user.number} ${user.set}")
+                userPassport.text = ("${user.passportNumber} ${user.passportSet}")
             }
         }
 

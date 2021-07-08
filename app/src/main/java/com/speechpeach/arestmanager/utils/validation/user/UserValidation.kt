@@ -1,7 +1,7 @@
 package com.speechpeach.arestmanager.utils.validation.user
 
 import com.speechpeach.arestmanager.models.User
-import com.speechpeach.arestmanager.utils.toUserPassportType
+import com.speechpeach.arestmanager.utils.toUserDocumentType
 
 object UserValidation {
 
@@ -10,19 +10,19 @@ object UserValidation {
     
     fun validate(user: User) {
 
-        when(user.type.toUserPassportType()) {
+        when(user.typeOfDocument.toUserDocumentType()) {
 
             User.Type.Passport -> {
-                if (user.number.toString().length != 6)
+                if (user.passportNumber.toString().length != 6)
                     throw InvalidNumberException()
-                if (user.set.toString().length != 4)
+                if (user.passportSet.toString().length != 4)
                     throw InvalidSetException()
             }
 
             User.Type.InternationalPassport -> {
-                if (user.number.toString().length != 6)
+                if (user.passportNumber.toString().length != 6)
                     throw InvalidNumberException()
-                if (user.set.toString().length != 2)
+                if (user.passportSet.toString().length != 2)
                     throw InvalidSetException()
             }
         }

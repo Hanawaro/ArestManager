@@ -25,8 +25,6 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
     private val viewModel: UsersListViewModel by viewModels()
     private val activityViewModel: MainActivityViewModel by activityViewModels()
 
-    private lateinit var userAdapter: UsersAdapter
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentUsersListBinding.inflate(inflater, container, false)
         return binding.root
@@ -44,9 +42,6 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
     override fun onResume() {
         super.onResume()
         activityViewModel.showBottomMenu()
-        viewModel.users.observe(viewLifecycleOwner) {
-            userAdapter.submitList(it)
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -56,7 +51,7 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_create -> {
-                val action = UsersListFragmentDirections.actionUsersListFragmentToCreateUserFragment(null)
+                val action = UsersListFragmentDirections.actionUsersListFragmentToLetUserFragment(null)
                 findNavController().navigate(action)
                 true
             }
@@ -65,9 +60,12 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
     }
 
     private fun initAdapter() {
+
+        lateinit var userAdapter: UsersAdapter
+
         val onItemClickListener = object : UsersAdapter.ItemClickListener {
             override fun onItemClick(user: User) {
-                val action = UsersListFragmentDirections.actionUsersListFragmentToCreateUserFragment(user)
+                val action = UsersListFragmentDirections.actionUsersListFragmentToLetUserFragment(user)
                 findNavController().navigate(action)
             }
 
@@ -76,7 +74,7 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
                         .setMessage("\nDo you want to delete ${user.secondName} ${user.name}\n")
                         .setPositiveButton("Delete") { _, _ ->
                             viewModel.deleteUser(user).observe(viewLifecycleOwner) {
-                                viewModel.users.observe(viewLifecycleOwner) {
+                                viewModel.getUsers().observe(viewLifecycleOwner) {
                                     userAdapter.submitList(it)
                                 }
                             }
@@ -96,10 +94,14 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
             setHasFixedSize(true)
         }
 
+        viewModel.getUsers().observe(viewLifecycleOwner) {
+            userAdapter.submitList(it)
+        }
+
         binding.refreshLayoutUsers.apply {
 
             setOnRefreshListener {
-                viewModel.users.observe(viewLifecycleOwner) {
+                viewModel.getUsers().observe(viewLifecycleOwner) {
                     userAdapter.submitList(it)
                     isRefreshing = false
                 }

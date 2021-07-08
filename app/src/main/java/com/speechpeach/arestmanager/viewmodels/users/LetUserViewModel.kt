@@ -1,10 +1,11 @@
 package com.speechpeach.arestmanager.viewmodels.users
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.speechpeach.arestmanager.models.User
 import com.speechpeach.arestmanager.repository.UserRepository
+import com.speechpeach.arestmanager.utils.QuickCalendar
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -12,17 +13,16 @@ class LetUserViewModel @Inject constructor(
         private val repository: UserRepository
 ): ViewModel() {
 
-        val userDateOfBirth: Calendar = Calendar.getInstance().apply {
-                time = Date()
-                add(Calendar.YEAR, -18)
-        }
+    lateinit var user: User
 
-        fun createUser(user: User) {
-                repository.create(user)
-        }
+    val userDateOfBirth = QuickCalendar.get(dayOffset = 0, monthOffset = 0, yearOffset = -18)
 
-        fun updateUser(user: User) {
-                repository.update(user)
-        }
+    fun createUser(user: User): LiveData<Int> {
+        return repository.create(user)
+    }
+
+    fun updateUser(user: User): LiveData<Boolean> {
+        return repository.update(user)
+    }
 
 }

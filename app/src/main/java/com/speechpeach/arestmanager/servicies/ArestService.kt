@@ -15,7 +15,7 @@ interface ArestService {
     fun getAll(): Call<ArestResponse>
 
     @GET("get_local_arests.php")
-    fun getLocal(
+    fun getUserArests(
         @Query("id") userID: Int
     ): Call<ArestResponse>
 

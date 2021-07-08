@@ -1,5 +1,6 @@
-package com.speechpeach.arestmanager.ui.fragments.arests
+package com.speechpeach.arestmanager.ui.fragments.usersAndArests
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,33 +14,29 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.speechpeach.arestmanager.R
-import com.speechpeach.arestmanager.databinding.FragmentEditArestBinding
+import com.speechpeach.arestmanager.databinding.FragmentLetArestBinding
 import com.speechpeach.arestmanager.models.Arest
-import com.speechpeach.arestmanager.models.User
-import com.speechpeach.arestmanager.utils.ValueConstants
-import com.speechpeach.arestmanager.utils.hideKeyboard
-import com.speechpeach.arestmanager.viewmodels.arests.EditArestViewModel
+import com.speechpeach.arestmanager.utils.*
+import com.speechpeach.arestmanager.viewmodels.usersAndArests.LetArestViewModel
 import com.speechpeach.arestmanager.viewmodels.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class EditArestFragment: Fragment(R.layout.fragment_edit_arest) {
+class LetArestFragment: Fragment(R.layout.fragment_let_arest) {
 
-    private lateinit var binding: FragmentEditArestBinding
-    private val args: EditArestFragmentArgs by navArgs()
+    private lateinit var binding: FragmentLetArestBinding
+    private val args: LetArestFragmentArgs by navArgs()
 
-    private val viewModel: EditArestViewModel by viewModels()
+    private val viewModel: LetArestViewModel by viewModels()
     private val activityViewModel: MainActivityViewModel by activityViewModels()
 
-    private lateinit var arest: Arest
-    private var user: User? = null
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentEditArestBinding.inflate(inflater, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentLetArestBinding.inflate(inflater, container, false)
 
         binding.apply {
-            fragment = this@EditArestFragment
+            lifecycleOwner = viewLifecycleOwner
+            fragment = this@LetArestFragment
             arest = args.arest
             isEditable = args.isEditable
         }
@@ -52,29 +49,28 @@ class EditArestFragment: Fragment(R.layout.fragment_edit_arest) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.dateOfRegistration.time = Date(args.arest.date * 1000)
+        viewModel.registrationDate.time = Date(args.arest.registrationDate * 1000)
 
         initUserInfo()
         initSpinner()
         initDatePicker()
 
-        viewModel.passport.observe(viewLifecycleOwner) {
+        viewModel.formattedPassport.observe(viewLifecycleOwner) {
             binding.layoutUser.userPassport.text = it
         }
     }
 
     fun onSubmit() {
         if (validate()) {
-
-            viewModel.updateArest(arest)
-
-            findNavController().navigateUp()
+            viewModel.updateArest(viewModel.arest).observe(viewLifecycleOwner) {
+                findNavController().navigateUp()
+            }
         }
     }
 
     fun selectUser() {
         if (validate()) {
-            val action = EditArestFragmentDirections.actionEditArestFragmentToSelectUserFragment(arest)
+            val action = LetArestFragmentDirections.actionLetArestFragmentToSelectUserFragment(viewModel.arest)
             findNavController().navigate(action)
         }
     }
@@ -105,16 +101,17 @@ class EditArestFragment: Fragment(R.layout.fragment_edit_arest) {
         }
 
         if (result) {
-            arest = args.arest.copy(
-                    name = viewModel.organization,
-                    date = viewModel.dateOfRegistration.time.time / 1000,
-                    number = binding.numberTextField.text.toString(),
+            viewModel.arest = args.arest.copy(
+                    organizationID = viewModel.organizationID,
+                    registrationDate = viewModel.registrationDate.time.time / 1000,
+                    documentNumber = binding.numberTextField.text.toString(),
                     base = binding.baseTextField.text.toString(),
                     sum = Integer.valueOf(binding.sumTextField.text.toString()),
-                    status = when(viewModel.statusValues[binding.spinnerStatus.selectedItemPosition]) {
-                        viewModel.activeValue -> Arest.Type.Active.toString()
-                        viewModel.canceledValue -> Arest.Type.Canceled.toString()
-                        viewModel.completeValue -> Arest.Type.Completed.toString()
+                    status = when(ValueConstants.ArestStatus.values[binding.spinnerStatus.selectedItemPosition]) {
+                        ValueConstants.ArestStatus.active -> Arest.Type.Active.toString()
+                        ValueConstants.ArestStatus.canceled -> Arest.Type.Canceled.toString()
+                        ValueConstants.ArestStatus.completed -> Arest.Type.Completed.toString()
+
                         else -> ""
                     }
             )
@@ -130,19 +127,13 @@ class EditArestFragment: Fragment(R.layout.fragment_edit_arest) {
 
         viewModel.getUser(args.arest).observe(viewLifecycleOwner) {
 
-            user = it
+            viewModel.user = it
 
-            viewModel.changePassport(args.arest.name, user)
+            viewModel.formatPassport(args.arest.organizationID)
 
             binding.layoutUser.apply {
-                val calendar = Calendar.getInstance().apply {
-                    time = Date(user!!.date * 1000)
-                }
-                val day = calendar.get(Calendar.DAY_OF_MONTH)
-                val month = calendar.get(Calendar.MONTH) + 1
-                val year = calendar.get(Calendar.YEAR)
-
-                userDate.text = ("$day/$month/$year")
+                val calendar = QuickCalendar.get(viewModel.user!!.dateOfBirth)
+                userDate.text = ("${calendar.day()}/${calendar.month()}/${calendar.year()}")
             }
         }
     }
@@ -158,19 +149,19 @@ class EditArestFragment: Fragment(R.layout.fragment_edit_arest) {
                 ArrayList(ValueConstants.Organization.codes.values)
         )
 
-        binding.spinnerType.setSelection(ArrayList(ValueConstants.Organization.codes.values).indexOf( ValueConstants.Organization.codes[args.arest.name] ))
+        binding.spinnerType.setSelection(ArrayList(ValueConstants.Organization.codes.values).indexOf( ValueConstants.Organization.codes[args.arest.organizationID] ))
 
         binding.spinnerType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
                 when (parent?.getItemAtPosition(position)?.toString()) {
                     ValueConstants.Organization.codes[ValueConstants.Organization.FSSP] -> {
-                        viewModel.organization = ValueConstants.Organization.FSSP
-                        viewModel.changePassport(ValueConstants.Organization.FSSP, user)
+                        viewModel.organizationID = ValueConstants.Organization.FSSP
+                        viewModel.formatPassport(ValueConstants.Organization.FSSP)
                     }
                     ValueConstants.Organization.codes[ValueConstants.Organization.FNS] -> {
-                        viewModel.organization = ValueConstants.Organization.FNS
-                        viewModel.changePassport(ValueConstants.Organization.FNS, user)
+                        viewModel.organizationID = ValueConstants.Organization.FNS
+                        viewModel.formatPassport(ValueConstants.Organization.FNS)
                     }
                 }
 
@@ -182,25 +173,24 @@ class EditArestFragment: Fragment(R.layout.fragment_edit_arest) {
         binding.spinnerStatus.adapter = ArrayAdapter(
                 requireContext(),
                 R.layout.item_dropdown_type,
-                viewModel.statusValues
+                ValueConstants.ArestStatus.values
         )
 
-        binding.spinnerStatus.setSelection(viewModel.statusValues.indexOf(
-                when(args.arest.status) {
-                    Arest.Type.Active.toString() -> viewModel.activeValue
-                    Arest.Type.Completed.toString() -> viewModel.completeValue
-                    Arest.Type.Canceled.toString() -> viewModel.canceledValue
-                    else -> ""
+        binding.spinnerStatus.setSelection(ValueConstants.ArestStatus.values.indexOf(
+                when(args.arest.status.toArestStatusType()) {
+                    Arest.Type.Active -> ValueConstants.ArestStatus.active
+                    Arest.Type.Completed -> ValueConstants.ArestStatus.completed
+                    Arest.Type.Canceled -> ValueConstants.ArestStatus.canceled
                 }
         ))
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initDatePicker() {
 
-        val currentDay = viewModel.dateOfRegistration.get(Calendar.DAY_OF_MONTH)
-        val currentMonth = viewModel.dateOfRegistration.get(Calendar.MONTH)
-        val currentYear = viewModel.dateOfRegistration.get(Calendar.YEAR)
-        binding.dateTextField.setText("$currentDay/${currentMonth + 1}/$currentYear")
+        viewModel.registrationDate.apply {
+            binding.dateTextField.setText("${day()}/${month()}/${year()}")
+        }
 
         binding.dateTextField.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus)
@@ -210,28 +200,24 @@ class EditArestFragment: Fragment(R.layout.fragment_edit_arest) {
 
             DatePickerDialog(requireContext()).apply {
                 setOnDateSetListener { _, year, month, dayOfMonth ->
-                    viewModel.dateOfRegistration.set(Calendar.YEAR, year)
-                    viewModel.dateOfRegistration.set(Calendar.MONTH, month)
-                    viewModel.dateOfRegistration.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    viewModel.registrationDate.apply {
+                        set(Calendar.YEAR, year)
+                        set(Calendar.MONTH, month)
+                        set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-                    binding.dateTextField.text?.clear()
-                    binding.dateTextField.setText("$dayOfMonth/${month + 1}/$year")
+                        binding.dateTextField.setText("${day()}/${month()}/${year()}")
+                    }
                     binding.dateTextField.error = null
                 }
                 setOnDismissListener {
                     binding.dateField.clearFocus()
                 }
 
+                viewModel.registrationDate.apply {
+                    datePicker.updateDate(year(), calendarMonth(), day())
+                }
 
-                val day = viewModel.dateOfRegistration.get(Calendar.DAY_OF_MONTH)
-                val month = viewModel.dateOfRegistration.get(Calendar.MONTH)
-                val year = viewModel.dateOfRegistration.get(Calendar.YEAR)
-
-                datePicker.updateDate(year, month, day)
-
-                datePicker.maxDate = Calendar.getInstance().apply {
-                    time = Date()
-                }.time.time
+                datePicker.maxDate = QuickCalendar.get().time.time
 
                 show()
             }

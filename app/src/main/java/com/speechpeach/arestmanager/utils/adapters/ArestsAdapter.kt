@@ -7,12 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.speechpeach.arestmanager.databinding.ItemArestBinding
 import com.speechpeach.arestmanager.models.Arest
-import com.speechpeach.arestmanager.utils.ValueConstants
-import com.speechpeach.arestmanager.utils.view.QuickCalendar
-import com.speechpeach.arestmanager.utils.view.day
-import com.speechpeach.arestmanager.utils.view.month
-import com.speechpeach.arestmanager.utils.view.year
-import com.speechpeach.arestmanager.utils.toArestStatusType
+import com.speechpeach.arestmanager.utils.*
 
 class ArestsAdapter(private val itemClickListener: ItemClickListener) : ListAdapter<Arest, ArestsAdapter.ViewHolder>(DiffCallback()) {
 
@@ -42,10 +37,10 @@ class ArestsAdapter(private val itemClickListener: ItemClickListener) : ListAdap
         fun bind(arest: Arest) {
             binding.apply {
 
-                val calendar = QuickCalendar.get(arest.date)
+                val calendar = QuickCalendar.get(arest.registrationDate)
 
                 arestDate.text = ("${calendar.day()}/${calendar.month()}/${calendar.year()}")
-                arestName.text = ValueConstants.Organization.codes[arest.name]
+                arestName.text = ValueConstants.Organization.codes[arest.organizationID]
                 arestOwner.text = ("${arest.userSecondName} ${arest.userSecondName}")
 
                 arestStatus.text = when(arest.status.toArestStatusType()) {

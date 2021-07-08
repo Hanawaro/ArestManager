@@ -25,8 +25,6 @@ class ArestsListFragment : Fragment(R.layout.fragment_arests_list) {
     private val viewModel: ArestViewModel by viewModels()
     private val activityViewModel: MainActivityViewModel by activityViewModels()
 
-    private lateinit var arestAdapter: ArestsAdapter
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentArestsListBinding.inflate(inflater, container, false)
         return binding.root
@@ -44,9 +42,6 @@ class ArestsListFragment : Fragment(R.layout.fragment_arests_list) {
     override fun onResume() {
         super.onResume()
         activityViewModel.showBottomMenu()
-        viewModel.arests.observe(viewLifecycleOwner) {
-            arestAdapter.submitList(it)
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -65,6 +60,9 @@ class ArestsListFragment : Fragment(R.layout.fragment_arests_list) {
     }
 
     private fun initAdapter() {
+
+        lateinit var arestAdapter: ArestsAdapter
+
         val onItemClickListener = object : ArestsAdapter.ItemClickListener {
             override fun onItemClick(arest: Arest) {
                 val action = ArestsListFragmentDirections.actionArestsListFragmentToEditArestFragment(arest, true)
@@ -73,10 +71,10 @@ class ArestsListFragment : Fragment(R.layout.fragment_arests_list) {
 
             override fun onItemLongClick(arest: Arest): Boolean {
                 AlertDialog.Builder(requireContext())
-                        .setMessage("\nDo you want to delete ${arest.name}\n")
+                        .setMessage("\nDo you want to delete ${arest.organizationID}\n")
                         .setPositiveButton("Delete") { _, _ ->
                             viewModel.deleteArest(arest).observe(viewLifecycleOwner) {
-                                viewModel.arests.observe(viewLifecycleOwner) {
+                                viewModel.getArests().observe(viewLifecycleOwner) {
                                     arestAdapter.submitList(it)
                                 }
                             }
@@ -97,10 +95,14 @@ class ArestsListFragment : Fragment(R.layout.fragment_arests_list) {
             setHasFixedSize(true)
         }
 
+        viewModel.getArests().observe(viewLifecycleOwner) {
+            arestAdapter.submitList(it)
+        }
+
         binding.refreshLayoutArests.apply {
 
             setOnRefreshListener {
-                viewModel.arests.observe(viewLifecycleOwner) {
+                viewModel.getArests().observe(viewLifecycleOwner) {
                     arestAdapter.submitList(it)
                     isRefreshing = false
                 }

@@ -8,12 +8,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class LocalArestsListViewModel @Inject constructor(
+class UserArestsListViewModel @Inject constructor(
         private val repository: ArestRepository
 ): ViewModel() {
 
     fun getArests(userID: Int): LiveData<List<Arest>> {
-        return repository.getLocal(userID)
+        return repository.getUserArests(userID)
     }
 
 }

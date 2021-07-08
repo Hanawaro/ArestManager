@@ -2,9 +2,13 @@
   <dictionary name="hanawaro3">
     <words>
       <w>arest</w>
+      <w>arestmanager</w>
       <w>arests</w>
       <w>bryansk</w>
       <w>fssp</w>
+      <w>speechpeach</w>
+      <w>viewmodel</w>
+      <w>viewmodels</w>
     </words>
   </dictionary>
 </component>

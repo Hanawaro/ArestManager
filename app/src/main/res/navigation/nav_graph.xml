@@ -18,7 +18,7 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_arestsListFragment_to_editArestFragment"
-            app:destination="@id/editArestFragment"
+            app:destination="@id/letArestFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -30,20 +30,21 @@
         android:label="Users"
         tools:layout="@layout/fragment_users_list" >
         <action
-            android:id="@+id/action_usersListFragment_to_createUserFragment"
-            app:destination="@id/createUserFragment"
+            android:id="@+id/action_usersListFragment_to_letUserFragment"
+            app:destination="@id/letUserFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
-        android:id="@+id/createUserFragment"
-        android:name="com.speechpeach.arestmanager.ui.fragments.users.CreateUserFragment"
+        android:id="@+id/letUserFragment"
+        android:name="com.speechpeach.arestmanager.ui.fragments.users.LetUserFragment"
+        tools:layout="@layout/fragment_let_user"
         android:label="User editor">
         <action
-            android:id="@+id/action_createUserFragment_to_localArestsListFragment"
-            app:destination="@id/localArestsListFragment"
+            android:id="@+id/action_letUserFragment_to_userArestsListFragment"
+            app:destination="@id/userArestsListFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -56,6 +57,7 @@
     <fragment
         android:id="@+id/createUserForArestFragment"
         android:name="com.speechpeach.arestmanager.ui.fragments.arests.CreateUserForArestFragment"
+        tools:layout="@layout/fragment_create_user_for_arest"
         android:label="Users" >
         <action
             android:id="@+id/action_createUserForArestFragment_to_createArestFragment"
@@ -87,12 +89,12 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
-        android:id="@+id/editArestFragment"
-        android:name="com.speechpeach.arestmanager.ui.fragments.arests.EditArestFragment"
+        android:id="@+id/letArestFragment"
+        android:name="com.speechpeach.arestmanager.ui.fragments.usersAndArests.LetArestFragment"
         android:label="Arest editor"
-        tools:layout="@layout/fragment_edit_arest">
+        tools:layout="@layout/fragment_let_arest">
         <action
-            android:id="@+id/action_editArestFragment_to_selectUserFragment"
+            android:id="@+id/action_letArestFragment_to_selectUserFragment"
             app:destination="@id/selectUserFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
@@ -107,13 +109,13 @@
     </fragment>
     <fragment
         android:id="@+id/selectUserFragment"
-        android:name="com.speechpeach.arestmanager.ui.fragments.users.SelectUserFragment"
+        android:name="com.speechpeach.arestmanager.ui.fragments.arests.SelectUserFragment"
         android:label="User selector"
         tools:layout="@layout/fragment_select_user">
         <action
-            android:id="@+id/action_selectUserFragment_to_editArestFragment2"
-            app:destination="@id/editArestFragment"
-            app:popUpTo="@id/editArestFragment"
+            android:id="@+id/action_selectUserFragment_to_letArestFragment"
+            app:destination="@id/letArestFragment"
+            app:popUpTo="@id/letArestFragment"
             app:popUpToInclusive="true"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
@@ -124,13 +126,13 @@
             app:argType="com.speechpeach.arestmanager.models.Arest" />
     </fragment>
     <fragment
-        android:id="@+id/localArestsListFragment"
-        android:name="com.speechpeach.arestmanager.ui.fragments.users.LocalArestsListFragment"
+        android:id="@+id/userArestsListFragment"
+        android:name="com.speechpeach.arestmanager.ui.fragments.users.UserArestsListFragment"
         android:label="Arests"
-        tools:layout="@layout/fragment_local_arests_list">
+        tools:layout="@layout/fragment_user_arests_list">
         <action
-            android:id="@+id/action_localArestsListFragment_to_editArestFragment"
-            app:destination="@id/editArestFragment"
+            android:id="@+id/action_userArestsListFragment_to_letArestFragment"
+            app:destination="@id/letArestFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"

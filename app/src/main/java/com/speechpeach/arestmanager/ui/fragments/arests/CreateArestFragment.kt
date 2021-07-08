@@ -1,5 +1,6 @@
 package com.speechpeach.arestmanager.ui.fragments.arests
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,8 +15,7 @@ import androidx.navigation.fragment.navArgs
 import com.speechpeach.arestmanager.R
 import com.speechpeach.arestmanager.databinding.FragmentCreateArestBinding
 import com.speechpeach.arestmanager.models.Arest
-import com.speechpeach.arestmanager.utils.ValueConstants
-import com.speechpeach.arestmanager.utils.hideKeyboard
+import com.speechpeach.arestmanager.utils.*
 import com.speechpeach.arestmanager.viewmodels.arests.CreateArestViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -29,16 +29,14 @@ class CreateArestFragment: Fragment(R.layout.fragment_create_arest) {
 
     private val viewModel: CreateArestViewModel by viewModels()
 
-    private lateinit var arest: Arest
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentCreateArestBinding.inflate(inflater, container, false)
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             fragment = this@CreateArestFragment
             viewmodel = viewModel
-            status = "Active"
+            status = ValueConstants.ArestStatus.active
         }
 
         return binding.root
@@ -56,12 +54,16 @@ class CreateArestFragment: Fragment(R.layout.fragment_create_arest) {
             hideKeyboard()
 
             if (args.isNewUser) {
-                viewModel.createArestAndUser(arest, args.user)
+                viewModel.createArestAndUser(viewModel.arest, args.user).observe(viewLifecycleOwner) {
+                    val action = CreateArestFragmentDirections.actionCreateArestFragmentToArestsListFragment()
+                    findNavController().navigate(action)
+                }
             } else {
-                viewModel.createArestByUser(arest, args.user)
+                viewModel.createArestWithUser(viewModel.arest, args.user).observe(viewLifecycleOwner) {
+                    val action = CreateArestFragmentDirections.actionCreateArestFragmentToArestsListFragment()
+                    findNavController().navigate(action)
+                }
             }
-            val action = CreateArestFragmentDirections.actionCreateArestFragmentToArestsListFragment()
-            findNavController().navigate(action)
         }
     }
 
@@ -90,10 +92,10 @@ class CreateArestFragment: Fragment(R.layout.fragment_create_arest) {
         }
 
         if (result) {
-            arest = Arest(
-                    name = viewModel.organization,
-                    date = viewModel.dateOfRegistration.time.time / 1000,
-                    number = binding.numberTextField.text.toString(),
+            viewModel.arest = Arest(
+                    organizationID = viewModel.organizationID,
+                    registrationDate = viewModel.registrationDate.time.time / 1000,
+                    documentNumber = binding.numberTextField.text.toString(),
                     base = binding.baseTextField.text.toString(),
                     sum = Integer.valueOf(binding.sumTextField.text.toString()),
                     status = Arest.Type.Active.toString()
@@ -115,12 +117,12 @@ class CreateArestFragment: Fragment(R.layout.fragment_create_arest) {
 
                 when (parent?.getItemAtPosition(position)?.toString()) {
                     ValueConstants.Organization.codes[ValueConstants.Organization.FSSP] -> {
-                        viewModel.organization = ValueConstants.Organization.FSSP
-                        viewModel.changePassport(ValueConstants.Organization.FSSP, args.user)
+                        viewModel.organizationID = ValueConstants.Organization.FSSP
+                        viewModel.formatPassport(ValueConstants.Organization.FSSP, args.user)
                     }
                     ValueConstants.Organization.codes[ValueConstants.Organization.FNS] -> {
-                        viewModel.organization = ValueConstants.Organization.FNS
-                        viewModel.changePassport(ValueConstants.Organization.FNS, args.user)
+                        viewModel.organizationID = ValueConstants.Organization.FNS
+                        viewModel.formatPassport(ValueConstants.Organization.FNS, args.user)
                     }
                 }
 
@@ -130,12 +132,12 @@ class CreateArestFragment: Fragment(R.layout.fragment_create_arest) {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initDatePicker() {
 
-        val currentDay = viewModel.dateOfRegistration.get(Calendar.DAY_OF_MONTH)
-        val currentMonth = viewModel.dateOfRegistration.get(Calendar.MONTH)
-        val currentYear = viewModel.dateOfRegistration.get(Calendar.YEAR)
-        binding.dateTextField.setText("$currentDay/${currentMonth + 1}/$currentYear")
+        viewModel.registrationDate.apply {
+            binding.dateTextField.setText("${day()}/${month()}/${year()}")
+        }
 
         binding.dateTextField.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus)
@@ -145,28 +147,25 @@ class CreateArestFragment: Fragment(R.layout.fragment_create_arest) {
 
             DatePickerDialog(requireContext()).apply {
                 setOnDateSetListener { _, year, month, dayOfMonth ->
-                    viewModel.dateOfRegistration.set(Calendar.YEAR, year)
-                    viewModel.dateOfRegistration.set(Calendar.MONTH, month)
-                    viewModel.dateOfRegistration.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-                    binding.dateTextField.text?.clear()
-                    binding.dateTextField.setText("$dayOfMonth/${month + 1}/$year")
+                    viewModel.registrationDate.apply {
+                        set(Calendar.YEAR, year)
+                        set(Calendar.MONTH, month)
+                        set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                        binding.dateTextField.setText("${day()}/${month()}/${year()}")
+                    }
                     binding.dateTextField.error = null
                 }
                 setOnDismissListener {
                     binding.dateField.clearFocus()
                 }
 
+                viewModel.registrationDate.apply {
+                    datePicker.updateDate(year(), calendarMonth(), day())
+                }
 
-                val day = viewModel.dateOfRegistration.get(Calendar.DAY_OF_MONTH)
-                val month = viewModel.dateOfRegistration.get(Calendar.MONTH)
-                val year = viewModel.dateOfRegistration.get(Calendar.YEAR)
-
-                datePicker.updateDate(year, month, day)
-
-                datePicker.maxDate = Calendar.getInstance().apply {
-                    time = Date()
-                }.time.time
+                datePicker.maxDate = QuickCalendar.get().time.time
 
                 show()
             }

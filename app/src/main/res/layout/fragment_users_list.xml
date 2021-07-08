@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.speechpeach.arestmanager.ui.fragments.topLevel.UsersListFragment">
 
-    <data>
-
-    </data>
+    <data />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout_users"

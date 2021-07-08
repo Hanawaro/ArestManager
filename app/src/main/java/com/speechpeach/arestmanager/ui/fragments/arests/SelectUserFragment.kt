@@ -1,4 +1,4 @@
-package com.speechpeach.arestmanager.ui.fragments.users
+package com.speechpeach.arestmanager.ui.fragments.arests
 
 import android.os.Bundle
 import android.view.*
@@ -11,7 +11,7 @@ import com.speechpeach.arestmanager.R
 import com.speechpeach.arestmanager.databinding.FragmentSelectUserBinding
 import com.speechpeach.arestmanager.models.User
 import com.speechpeach.arestmanager.utils.adapters.UsersAdapter
-import com.speechpeach.arestmanager.viewmodels.users.SelectUserViewModel
+import com.speechpeach.arestmanager.viewmodels.arests.SelectUserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,24 +22,23 @@ class SelectUserFragment: Fragment(R.layout.fragment_select_user) {
 
     private val viewModel: SelectUserViewModel by viewModels()
 
-    private lateinit var userAdapter: UsersAdapter
-
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentSelectUserBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initAdapter()
+    }
+
+    private fun initAdapter() {
+        lateinit var userAdapter: UsersAdapter
+
         val onItemClickListener = object : UsersAdapter.ItemClickListener {
             override fun onItemClick(user: User) {
-                val action = SelectUserFragmentDirections.actionSelectUserFragmentToEditArestFragment2(
+                val action = SelectUserFragmentDirections.actionSelectUserFragmentToLetArestFragment(
                         args.arest.copy(
                                 userID = user.id,
                                 userName = user.name,
@@ -59,7 +58,7 @@ class SelectUserFragment: Fragment(R.layout.fragment_select_user) {
             setHasFixedSize(true)
         }
 
-        viewModel.users.observe(viewLifecycleOwner) {
+        viewModel.getUsers().observe(viewLifecycleOwner) {
             userAdapter.submitList(it)
         }
     }

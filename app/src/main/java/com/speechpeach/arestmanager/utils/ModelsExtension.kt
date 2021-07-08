@@ -12,10 +12,10 @@ fun String.toArestStatusType()
         else -> throw IllegalArgumentException()
     }
 
-fun String.toUserPassportType()
+fun String.toUserDocumentType()
     = when(this) {
         User.Type.Passport.toString() -> User.Type.Passport
         User.Type.InternationalPassport.toString() -> User.Type.InternationalPassport
 
-    else -> throw IllegalArgumentException()
+        else -> throw IllegalArgumentException()
     }

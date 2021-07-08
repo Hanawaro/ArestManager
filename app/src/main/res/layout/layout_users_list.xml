@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="@{viewmodel.isUsersHidden ? View.GONE : View.VISIBLE}">
+        android:visibility="@{viewmodel.isUsersListHidden ? View.GONE : View.VISIBLE}">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_users"
