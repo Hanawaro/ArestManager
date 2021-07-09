@@ -6,28 +6,28 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class User(
-    @SerializedName("id")
+    @SerializedName("user_id")
     var id: Int = 0,
 
-    @SerializedName("name")
+    @SerializedName("user_name")
     val name: String,
 
-    @SerializedName("second_name")
+    @SerializedName("user_second_name")
     val secondName: String,
 
-    @SerializedName("type")
+    @SerializedName("user_type_of_document")
     val typeOfDocument: String,
 
-    @SerializedName("number")
+    @SerializedName("user_passport_number")
     val passportNumber: Int,
 
-    @SerializedName("set")
+    @SerializedName("user_passport_set")
     val passportSet: Int,
 
-    @SerializedName("date")
+    @SerializedName("user_date_of_birth")
     val dateOfBirth: Long,
 
-    @SerializedName("birthplace")
+    @SerializedName("user_birthplace")
     val birthplace: String
 ) : Parcelable {
 

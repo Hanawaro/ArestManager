@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.speechpeach.arestmanager.models.Arest
 import com.speechpeach.arestmanager.models.User
 import com.speechpeach.arestmanager.repository.ArestRepository
+import com.speechpeach.arestmanager.repository.UserRepository
 import com.speechpeach.arestmanager.utils.QuickCalendar
 import com.speechpeach.arestmanager.utils.ValueConstants
 import com.speechpeach.arestmanager.utils.toUserDocumentType
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateArestViewModel @Inject constructor(
-        private val repository: ArestRepository
+        private val arestRepository: ArestRepository,
+        private val userRepository: UserRepository
 ): ViewModel() {
 
     lateinit var arest: Arest
@@ -27,15 +29,15 @@ class CreateArestViewModel @Inject constructor(
     private val _formattedPassport = MutableLiveData("")
     val formattedPassport: LiveData<String> get() = _formattedPassport
 
-    fun createArestWithUser(arest: Arest, user: User): LiveData<Int> {
+    fun createArest(arest: Arest, userID: Int): LiveData<Int> {
         val linkedArest = arest.copy(
-                userID = user.id
+                userID = userID
         )
-        return repository.create(linkedArest)
+        return arestRepository.create(linkedArest)
     }
 
-    fun createArestAndUser(arest: Arest, user: User): LiveData<Int> {
-        return repository.create(arest, user)
+    fun createUser(user: User) : LiveData<Int> {
+        return userRepository.create(user)
     }
 
     fun formatPassport(organization: Int, user: User) {

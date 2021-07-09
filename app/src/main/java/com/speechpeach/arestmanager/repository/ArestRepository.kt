@@ -2,7 +2,6 @@ package com.speechpeach.arestmanager.repository
 
 import androidx.lifecycle.MutableLiveData
 import com.speechpeach.arestmanager.models.Arest
-import com.speechpeach.arestmanager.models.User
 import com.speechpeach.arestmanager.servicies.ArestResponse
 import com.speechpeach.arestmanager.servicies.ArestService
 import retrofit2.Call
@@ -80,9 +79,9 @@ class ArestRepository @Inject constructor(private val service: ArestService) {
         val result = MutableLiveData<Int>()
 
         val response = service.create(
-            name = arest.organizationID,
-            date = arest.registrationDate,
-            number = arest.documentNumber,
+            organizationID = arest.organizationID,
+            registrationDate = arest.registrationDate,
+            documentNumber = arest.documentNumber,
             base = arest.base,
             sum = arest.sum,
             status = arest.status,
@@ -106,53 +105,15 @@ class ArestRepository @Inject constructor(private val service: ArestService) {
         return result
     }
 
-    fun create(arest: Arest, user: User): MutableLiveData<Int> {
-        val result = MutableLiveData<Int>()
-
-        val response = service.create(
-                arestName = arest.organizationID,
-                arestDate = arest.registrationDate,
-                arestNumber = arest.documentNumber,
-                arestBase = arest.base,
-                arestSum = arest.sum,
-                arestStatus = arest.status,
-
-                userName = user.name,
-                userSecondName = user.secondName,
-                userType = user.typeOfDocument,
-                userNumber = user.passportNumber,
-                userSet = user.passportSet,
-                userDate = user.dateOfBirth,
-                userBirthplace = user.birthplace
-        )
-
-        response.enqueue(object : Callback<ArestResponse> {
-            override fun onResponse(call: Call<ArestResponse>, response: Response<ArestResponse>) {
-                if (response.isSuccessful) {
-                    result.value = response.body()?.success ?: 0
-                } else {
-                    result.value = 0
-                }
-            }
-
-            override fun onFailure(call: Call<ArestResponse>, t: Throwable) {
-                result.value = 0
-            }
-        })
-
-        return result
-    }
-
-
     fun update(arest: Arest): MutableLiveData<Boolean>{
 
         val result = MutableLiveData<Boolean>()
 
         val response = service.update(
             id = arest.id,
-            name = arest.organizationID,
-            date = arest.registrationDate,
-            number = arest.documentNumber,
+            organizationID = arest.organizationID,
+            registrationDate = arest.registrationDate,
+            documentNumber = arest.documentNumber,
             base = arest.base,
             sum = arest.sum,
             status = arest.status,

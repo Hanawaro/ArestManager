@@ -6,67 +6,48 @@ import retrofit2.http.*
 
 interface ArestService {
 
-    @GET("get_arest.php")
+    @GET("arests_get.php")
     fun get(
-        @Query("id") id: Int
+        @Query("arest_id") id: Int
     ): Call<ArestResponse>
 
-    @GET("get_arests.php")
+    @GET("arests_get_all.php")
     fun getAll(): Call<ArestResponse>
 
-    @GET("get_local_arests.php")
+    @GET("arests_users_get.php")
     fun getUserArests(
-        @Query("id") userID: Int
+        @Query("user_id") userID: Int
     ): Call<ArestResponse>
 
     @FormUrlEncoded
-    @POST("create_arest.php")
+    @POST("arests_create.php")
     fun create(
-        @Field("name") name: Int,
-        @Field("date") date: Long,
-        @Field("number") number: String,
-        @Field("base") base: String,
-        @Field("sum") sum: Int,
-        @Field("status") status: String,
-        @Field("user_id") userID: Int
+            @Field("arest_organization_id") organizationID: Int,
+            @Field("arest_registration_date") registrationDate: Long,
+            @Field("arest_document_number") documentNumber: String,
+            @Field("arest_base") base: String,
+            @Field("arest_sum") sum: Int,
+            @Field("arest_status") status: String,
+            @Field("user_id") userID: Int
     ): Call<ArestResponse>
 
     @FormUrlEncoded
-    @POST("create_arest_and_user.php")
-    fun create(
-            @Field("arest_name") arestName: Int,
-            @Field("arest_date") arestDate: Long,
-            @Field("arest_number") arestNumber: String,
-            @Field("arest_base") arestBase: String,
-            @Field("arest_sum") arestSum: Int,
-            @Field("arest_status") arestStatus: String,
-
-            @Field("user_name") userName: String,
-            @Field("user_second_name") userSecondName: String,
-            @Field("user_type") userType: String,
-            @Field("user_number") userNumber: Int,
-            @Field("user_set") userSet: Int,
-            @Field("user_date") userDate: Long,
-            @Field("user_birthplace") userBirthplace: String
-    ) : Call<ArestResponse>
-
-    @FormUrlEncoded
-    @POST("update_arest.php")
+    @POST("arests_update.php")
     fun update(
-        @Field("id") id: Int,
-        @Field("name") name: Int,
-        @Field("date") date: Long,
-        @Field("number") number: String,
-        @Field("base") base: String,
-        @Field("sum") sum: Int,
-        @Field("status") status: String,
-        @Field("user_id") userID: Int
+            @Field("arest_id") id: Int,
+            @Field("arest_organization_id") organizationID: Int,
+            @Field("arest_registration_date") registrationDate: Long,
+            @Field("arest_document_number") documentNumber: String,
+            @Field("arest_base") base: String,
+            @Field("arest_sum") sum: Int,
+            @Field("arest_status") status: String,
+            @Field("user_id") userID: Int
     ): Call<ArestResponse>
 
     @FormUrlEncoded
-    @POST("remove_arest.php")
+    @POST("arests_delete.php")
     fun remove(
-        @Field("id") id: Int
+        @Field("arest_id") id: Int
     ): Call<ArestResponse>
 
 }

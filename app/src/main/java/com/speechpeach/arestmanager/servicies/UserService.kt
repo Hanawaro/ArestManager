@@ -6,43 +6,43 @@ import retrofit2.http.*
 
 interface UserService {
 
-    @GET("get_user.php")
+    @GET("users_get.php")
     fun get(
-        @Query("id") id: Int
+        @Query("user_id") id: Int
     ): Call<UserResponse>
 
-    @GET("get_users.php")
+    @GET("users_get_all.php")
     fun getAll(): Call<UserResponse>
 
     @FormUrlEncoded
-    @POST("create_user.php")
+    @POST("users_create.php")
     fun create(
-        @Field("name") name: String,
-        @Field("second_name") secondName: String,
-        @Field("type") type: String,
-        @Field("number") number: Int,
-        @Field("set") set: Int,
-        @Field("date") date: Long,
-        @Field("birthplace") birthplace: String
+        @Field("user_name") name: String,
+        @Field("user_second_name") secondName: String,
+        @Field("user_type_of_document") type: String,
+        @Field("user_passport_number") number: Int,
+        @Field("user_passport_set") set: Int,
+        @Field("user_date_of_birth") date: Long,
+        @Field("user_birthplace") birthplace: String
     ): Call<UserResponse>
 
     @FormUrlEncoded
-    @POST("update_user.php")
+    @POST("users_update.php")
     fun update(
-        @Field("id") id: Int,
-        @Field("name") name: String,
-        @Field("second_name") secondName: String,
-        @Field("type") type: String,
-        @Field("number") number: Int,
-        @Field("set") set: Int,
-        @Field("date") date: Long,
-        @Field("birthplace") birthplace: String
+        @Field("user_id") id: Int,
+        @Field("user_name") name: String,
+        @Field("user_second_name") secondName: String,
+        @Field("user_type_of_document") type: String,
+        @Field("user_passport_number") number: Int,
+        @Field("user_passport_set") set: Int,
+        @Field("user_date_of_birth") date: Long,
+        @Field("user_birthplace") birthplace: String
     ): Call<UserResponse>
 
     @FormUrlEncoded
-    @POST("remove_user.php")
+    @POST("users_delete.php")
     fun remove(
-        @Field("id") id: Int
+        @Field("user_id") id: Int
     ): Call<UserResponse>
 
 }

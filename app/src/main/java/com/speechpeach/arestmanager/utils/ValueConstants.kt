@@ -56,10 +56,10 @@ object ValueConstants {
 
     object Retrofit {
 
-        private const val isDebug = true
+        private const val isDebug = false
 
-        private const val DEBUG_URL = "http://192.168.0.65/api/"
-        private const val PRODUCTION_URL = "http://31.132.135.190:8888/api/"
+        private const val DEBUG_URL = "http://192.168.0.65/napi/"
+        private const val PRODUCTION_URL = "http://31.132.135.190:8888/napi/"
 
         val URL = if(isDebug) DEBUG_URL else PRODUCTION_URL
     }

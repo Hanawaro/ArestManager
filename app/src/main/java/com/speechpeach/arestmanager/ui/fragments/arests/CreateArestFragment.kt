@@ -54,12 +54,14 @@ class CreateArestFragment: Fragment(R.layout.fragment_create_arest) {
             hideKeyboard()
 
             if (args.isNewUser) {
-                viewModel.createArestAndUser(viewModel.arest, args.user).observe(viewLifecycleOwner) {
-                    val action = CreateArestFragmentDirections.actionCreateArestFragmentToArestsListFragment()
-                    findNavController().navigate(action)
+                viewModel.createUser(args.user).observe(viewLifecycleOwner) { id ->
+                    viewModel.createArest(viewModel.arest, id).observe(viewLifecycleOwner) {
+                        val action = CreateArestFragmentDirections.actionCreateArestFragmentToArestsListFragment()
+                        findNavController().navigate(action)
+                    }
                 }
             } else {
-                viewModel.createArestWithUser(viewModel.arest, args.user).observe(viewLifecycleOwner) {
+                viewModel.createArest(viewModel.arest, args.user.id).observe(viewLifecycleOwner) {
                     val action = CreateArestFragmentDirections.actionCreateArestFragmentToArestsListFragment()
                     findNavController().navigate(action)
                 }

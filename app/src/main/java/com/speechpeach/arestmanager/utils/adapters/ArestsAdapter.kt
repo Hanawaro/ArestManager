@@ -41,7 +41,7 @@ class ArestsAdapter(private val itemClickListener: ItemClickListener) : ListAdap
 
                 arestDate.text = ("${calendar.day()}/${calendar.month()}/${calendar.year()}")
                 arestName.text = ValueConstants.Organization.codes[arest.organizationID]
-                arestOwner.text = ("${arest.userSecondName} ${arest.userSecondName}")
+                arestOwner.text = ("${arest.userSecondName} ${arest.userName}")
 
                 arestStatus.text = when(arest.status.toArestStatusType()) {
                     Arest.Type.Active    -> ValueConstants.ArestStatus.active
